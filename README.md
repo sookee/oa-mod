@@ -11,7 +11,7 @@ fennel (FennelFettish)
 
 wing (Livewingx)
 
-Each dev has their own brance,
+Each dev has their own branch.
 
 *) Please switch to your own branch and dont push to the master.
 
