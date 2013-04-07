@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "bg_public.h"
 #include "g_public.h"
 #include "challenges.h"
+#include "katina.h"
 
 //==================================================================
 
@@ -420,6 +421,9 @@ struct gclient_s {
         qboolean        spawnprotected;
 
         int			accuracy[WP_NUM_WEAPONS][2];
+		
+		
+	katina_t stats;
 };
 
 

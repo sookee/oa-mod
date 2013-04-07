@@ -2119,6 +2119,9 @@ void ClientDisconnect( int clientNum ) {
 	if ( !ent->client ) {
 		return;
 	}
+    
+    // Write katina stats to log
+    katina_write(clientNum, &ent->client->stats);
 
         ClientLeaving( clientNum);
     //KK-OAX Admin

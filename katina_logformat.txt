@@ -1,0 +1,24 @@
+shots with each weapon
+KATINA: 0 <client#> <weapon#> <count>
+
+hits with each damage type (for rockets: direct hits and splash dmg are separate columns)
+KATINA: 1 <client#> <damageType#> <count>
+
+hits received for each damage type (for rockets: direct hits and splash dmg are separate columns)
+KATINA: 2 <client#> <damageType#> <count>
+
+
+
+damage done with each weapon
+KATINA: 10 <client#> <weapon#> <amount>
+
+damage received from each weapon
+KATINA: 11 <client#> <weapon#> <amount>
+
+
+
+healing received
+KATINA: 20 <client#> <amount>
+
+armor picked up
+KATINA: 21 <client#> <amount>

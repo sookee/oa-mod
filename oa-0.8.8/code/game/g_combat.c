@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "g_local.h"
 #include "challenges.h"
+#include "katina.h"
 
 /*
 ============
@@ -481,7 +482,11 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	if ( level.intermissiontime ) {
 		return;
 	}
-
+    
+    // Write katina stats for the target
+    if(self->client)
+        katina_write(self->s.clientNum, &self->client->stats);
+    
 //unlagged - backward reconciliation #2
 	// make sure the body shows up in the client's current position
 	G_UnTimeShiftClient( self );
@@ -1319,6 +1324,19 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		} else if ( targ->pain ) {
 			targ->pain (targ, attacker, take);
 		}
+        
+        // Katina stats
+        if(targ->client)
+        {
+            targ->client->stats.numHitsRecv[mod]++;
+            targ->client->stats.damageRecv[mod] += take;
+        }
+        
+        if(attacker && attacker->client)
+        {
+            attacker->client->stats.numHits[mod]++;
+            attacker->client->stats.damageDone[mod] += take;
+        }
 	}
 
 	
