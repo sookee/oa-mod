@@ -59,13 +59,12 @@ copy  ..\..\..\code\game\g_syscalls.asm ..
 %cc%  ../../../code/game/g_utils.c
 %cc%  ../../../code/game/g_vote.c
 %cc%  ../../../code/game/g_weapon.c
-
 %cc%  ../../../code/game/katina.c
 
 %cc%  ../../../code/qcommon/q_math.c
 %cc%  ../../../code/qcommon/q_shared.c
 
-q3asm -v -f ../game
+q3asm -f ../game
 
 cd ..\..\..
 pause

@@ -276,39 +276,41 @@ int Pickup_Weapon (gentity_t *ent, gentity_t *other) {
 int Pickup_Health (gentity_t *ent, gentity_t *other) {
 	int			max;
 	int			quantity;
-    
-    int healthBefore = other->health;
+    int         healthBefore = other->health;
 
-    
     if( !other->client)
         return RESPAWN_HEALTH;
         
 	// small and mega healths will go over the max
-    if( other->client && bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD )
-        max = other->client->ps.stats[STAT_MAX_HEALTH];
-    else if ( ent->item->quantity != 5 && ent->item->quantity != 100 )
-        max = other->client->ps.stats[STAT_MAX_HEALTH];
-    else
-        max = other->client->ps.stats[STAT_MAX_HEALTH] * 2;
+	if( other->client && bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD ) {
+		max = other->client->ps.stats[STAT_MAX_HEALTH];
+	}
+	else
+	if ( ent->item->quantity != 5 && ent->item->quantity != 100 ) {
+		max = other->client->ps.stats[STAT_MAX_HEALTH];
+	} else {
+		max = other->client->ps.stats[STAT_MAX_HEALTH] * 2;
+	}
 
-    if ( ent->count )
-        quantity = ent->count;
-    else
-        quantity = ent->item->quantity;
+	if ( ent->count ) {
+		quantity = ent->count;
+	} else {
+		quantity = ent->item->quantity;
+	}
 
-    other->health += quantity;
+	other->health += quantity;
 
-    if (other->health > max )
-        other->health = max;
-
-    other->client->ps.stats[STAT_HEALTH] = other->health;
-
+	if (other->health > max ) {
+		other->health = max;
+	}
+	other->client->ps.stats[STAT_HEALTH] = other->health;
+    
     // Katina stats
     other->client->stats.healthPickedUp += other->health - healthBefore;
 
-    // mega health respawns slow
-	if ( ent->item->quantity == 100 )
+	if ( ent->item->quantity == 100 ) {		// mega health respawns slow
 		return RESPAWN_MEGAHEALTH;
+	}
 
 	return RESPAWN_HEALTH;
 }
@@ -317,8 +319,8 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 
 int Pickup_Armor( gentity_t *ent, gentity_t *other ) {
 	int		upperBound;
-
-    int armorBefore = other->client->ps.stats[STAT_ARMOR];
+    int     armorBefore = other->client->ps.stats[STAT_ARMOR];
+    
 	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
 
 	if( other->client && bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD ) {

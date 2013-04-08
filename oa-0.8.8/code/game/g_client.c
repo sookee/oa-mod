@@ -1992,20 +1992,21 @@ else
 	//	ent->health = client->ps.stats[STAT_HEALTH] = 0;
 }
 	//Instantgib mode, replace weapons with rail (and maybe gauntlet)
-    if(g_instantgib.integer)
-    {
+	if(g_instantgib.integer)
+	{
+        // For values > 2: Players spawn with gauntlet only
+        client->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
         if(g_instantgib.integer <= 2)
         {
-            client->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
             client->ps.ammo[WP_RAILGUN] = 999; //Don't display any ammo
         }
         
-        if(g_instantgib.integer>1)
-        {
-             client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
-             client->ps.ammo[WP_GAUNTLET] = -1;
-        }
-    }
+		if(g_instantgib.integer > 1)
+		{
+			 client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
+	         client->ps.ammo[WP_GAUNTLET] = -1;
+		}
+	}
 
 	//nexuiz style rocket arena (rocket launcher only)
 	if(g_rockets.integer) 

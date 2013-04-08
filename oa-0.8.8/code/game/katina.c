@@ -1,5 +1,5 @@
 #include "g_local.h" // definitions needed in katina.h
-//#include "katina.h" // g_local.h also includes katina.h
+//#include "katina.h"
 
 
 typedef enum

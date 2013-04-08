@@ -1,7 +1,9 @@
 //#include "bg_public.h" // this one usually gets included in g_local.h
 
-#ifndef _KATINA_H
-#define _KATINA_H
+#if defined(KATINA_H)
+#else
+#define KATINA_H 1
+
 
 typedef struct
 {
@@ -26,10 +28,6 @@ typedef struct
 } katina_t;
 
 
-
-void katina_reset(katina_t* stats);
-
 void katina_write(int clientNum, katina_t* stats);
 
-
-#endif /* ifndef _KATINA_H */
+#endif
