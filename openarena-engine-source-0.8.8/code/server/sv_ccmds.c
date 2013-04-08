@@ -1136,12 +1136,8 @@ static void SV_Status_f( void ) {
 	Com_Printf ("\n");
 }
 
-/*
-==================
-SV_ConSay_f
-==================
-*/
-static void SV_ConSay_f(void) {
+static void SV_Echo( char* prefix, char* cmd , int newline )
+{
 	char	*p;
 	char	text[1024];
 
@@ -1155,7 +1151,7 @@ static void SV_ConSay_f(void) {
 		return;
 	}
 
-	strcpy (text, "console: ");
+	strcpy (text, prefix);
 	p = Cmd_Args();
 
 	if ( *p == '"' ) {
@@ -1165,9 +1161,39 @@ static void SV_ConSay_f(void) {
 
 	strcat(text, p);
 
-	SV_SendServerCommand(NULL, "chat \"%s\"", text);
+	if (newline)
+	{
+		SV_SendServerCommand( NULL, "%s \"%s\n\"", cmd , text );
+	}
+	else
+	{
+		SV_SendServerCommand( NULL, "%s \"%s\"", cmd , text );
+	}
+
 }
 
+/*
+==================
+SV_ConSay_f
+==================
+*/
+static void SV_ConSay_f(void) {
+	char* prefix = "console: ";
+	char* cmd = "chat ";
+	SV_Echo( prefix , cmd , 0 );
+}
+
+/*
+==================
+SV_ConSayNoBeep_f
+==================
+*/
+static void SV_ConSayNoBeep_f(void) {
+	char* prefix = "";
+	char* cmd = "print ";
+        //Com_Printf("---");
+	SV_Echo( prefix , cmd , 1 );
+}
 
 /*
 ==================
@@ -1303,6 +1329,7 @@ void SV_AddOperatorCommands( void ) {
 	Cmd_AddCommand ("killserver", SV_KillServer_f);
 	if( com_dedicated->integer ) {
 		Cmd_AddCommand ("say", SV_ConSay_f);
+		Cmd_AddCommand ("saynobeep", SV_ConSayNoBeep_f);
 	}
 	
 	Cmd_AddCommand("rehashbans", SV_RehashBans_f);
