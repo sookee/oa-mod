@@ -7,16 +7,24 @@
 
 typedef struct
 {
-    int    numShots[WP_NUM_WEAPONS];
-    int    numHits[MOD_NUM_DAMAGETYPES];
-    int    numHitsRecv[MOD_NUM_DAMAGETYPES];
+    // KLT_WEAPON_USAGE
+    int numShots[WP_NUM_WEAPONS];
     
-    int    damageDone[MOD_NUM_DAMAGETYPES];
-    int    damageRecv[MOD_NUM_DAMAGETYPES];
+    // KLT_MOD_DAMAGE
+    int numHits[MOD_NUM_DAMAGETYPES];
+    int numHitsRecv[MOD_NUM_DAMAGETYPES];
+    int damageDone[MOD_NUM_DAMAGETYPES];
+    int damageRecv[MOD_NUM_DAMAGETYPES];
 
-    
-    //int    healingRecv;
-    //int    armorPickedUp;
+    // KLT_CLIENT_INFO
+    int fragsFace;          // frags done to enemy face
+    int fragsBack;          // frags done to enemy back
+    int fraggedInFace;      // fragged from the front
+    int fraggedInBack;      // fragged from the back
+    int pushesDone;
+    int pushesRecv;
+    int healthPickedUp;
+    int armorPickedUp;
 } katina_t;
 
 

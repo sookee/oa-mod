@@ -297,12 +297,16 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 		quantity = ent->item->quantity;
 	}
 
+    int healthBefore = other->health;
 	other->health += quantity;
 
 	if (other->health > max ) {
 		other->health = max;
 	}
 	other->client->ps.stats[STAT_HEALTH] = other->health;
+    
+    // Katina stats
+    other->client->stats.healthPickedUp += other->health - healthBefore;
 
 	if ( ent->item->quantity == 100 ) {		// mega health respawns slow
 		return RESPAWN_MEGAHEALTH;
@@ -316,6 +320,7 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 int Pickup_Armor( gentity_t *ent, gentity_t *other ) {
 	int		upperBound;
 
+    int armorBefore = other->client->ps.stats[STAT_ARMOR];
 	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
 
 	if( other->client && bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD ) {
@@ -328,6 +333,9 @@ int Pickup_Armor( gentity_t *ent, gentity_t *other ) {
 	if ( other->client->ps.stats[STAT_ARMOR] > upperBound ) {
 		other->client->ps.stats[STAT_ARMOR] = upperBound;
 	}
+    
+    // Katina stats
+    other->client->stats.armorPickedUp += other->client->ps.stats[STAT_ARMOR] - armorBefore;
 
 	return RESPAWN_ARMOR;
 }
