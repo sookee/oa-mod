@@ -7,4 +7,4 @@ KATINA: 1 <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv>
 
 
 Client Info Update
-KATINA: 2 <client#> <fragsFace> <fragsBack> <fraggedInFace> <fraggedInBack> <pushesDone> <pushesRecv> <healthPickedUp> <armorPickedUp>
+KATINA: 2 <client#> <#fragsFace> <#fragsBack> <#fraggedInFace> <#fraggedInBack> <#pushesDone> <#pushesRecv> <healthPickedUp> <armorPickedUp>

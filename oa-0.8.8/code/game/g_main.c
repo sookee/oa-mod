@@ -1469,8 +1469,13 @@ void BeginIntermission( void ) {
 	// move all clients to the intermission point
 	for (i=0 ; i< level.maxclients ; i++) {
 		client = g_entities + i;
+        
 		if (!client->inuse)
 			continue;
+        
+        // Write katina stats to log
+        katina_write(i, &client->client->stats);
+        
 		// respawn if dead
 		if (client->health <= 0) {
 			ClientRespawn(client);
