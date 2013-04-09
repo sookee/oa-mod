@@ -6,5 +6,5 @@ MOD (Means of Death = Damage Type) Damage Update
 KATINA: 1 <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv>
 
 
-Client Info Update
-KATINA: 2 <client#> <#fragsFace> <#fragsBack> <#fraggedInFace> <#fraggedInBack> <#pushesDone> <#pushesRecv> <healthPickedUp> <armorPickedUp>
+Player Stats Update
+KATINA: 2 <client#> <#fragsFace> <#fragsBack> <#fraggedInFace> <#fraggedInBack> <#spawnKillsDone> <#spanwKillsRecv> <#pushesDone> <#pushesRecv> <healthPickedUp> <armorPickedUp>

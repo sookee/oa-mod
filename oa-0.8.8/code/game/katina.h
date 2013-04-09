@@ -5,6 +5,9 @@
 #define KATINA_H 1
 
 
+#define KATINA_SPAWNKILL_TIME 1800  // in msecs
+
+
 typedef struct
 {
     // KLT_WEAPON_USAGE
@@ -21,11 +24,20 @@ typedef struct
     int fragsBack;          // frags done to enemy back
     int fraggedInFace;      // fragged from the front
     int fraggedInBack;      // fragged from the back
+    int spawnKillsDone;
+    int spawnKillsRecv;
     int pushesDone;
     int pushesRecv;
     int healthPickedUp;
     int armorPickedUp;
 } katina_t;
+
+
+
+typedef struct
+{
+    int spawnTime;          // level.time in msec of last spawn
+} katina_persistent_t;
 
 
 void katina_write(int clientNum, katina_t* stats);

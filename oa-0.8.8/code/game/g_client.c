@@ -1860,6 +1860,7 @@ void ClientSpawn(gentity_t *ent) {
     memcpy(persistant,client->ps.persistant,MAX_PERSISTANT*sizeof(int));
 	eventSequence = client->ps.eventSequence;
 
+    // CLEAR ALL CLIENT DATA
 	Com_Memset (client, 0, sizeof(*client));
 
 	client->pers = saved;
@@ -1895,6 +1896,9 @@ void ClientSpawn(gentity_t *ent) {
 	// clear entity values
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 	client->ps.eFlags = flags;
+    
+    // For katina stats: remember time of last spawn
+    client->katina.spawnTime = level.time;
 
 	ent->s.groundEntityNum = ENTITYNUM_NONE;
 	ent->client = &level.clients[index];
@@ -1995,11 +1999,13 @@ else
 	if(g_instantgib.integer)
 	{
         // For values > 2: Players spawn with gauntlet only
-        client->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
         if(g_instantgib.integer <= 2)
         {
+            client->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
             client->ps.ammo[WP_RAILGUN] = 999; //Don't display any ammo
         }
+        else
+            client->ps.stats[STAT_WEAPONS] = 0;
         
 		if(g_instantgib.integer > 1)
 		{

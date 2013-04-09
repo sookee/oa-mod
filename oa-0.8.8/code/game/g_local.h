@@ -424,6 +424,7 @@ struct gclient_s {
 		
 		
 	katina_t stats;
+    katina_persistent_t katina;
 };
 
 

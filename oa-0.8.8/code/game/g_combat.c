@@ -483,9 +483,18 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		return;
 	}
     
-    // Write katina stats for the target
     if(self->client)
+    {
+        // For katina stats: Check for spawnkills
+        if( attacker && attacker->client && (self->client->katina.spawnTime + KATINA_SPAWNKILL_TIME) > level.time)
+        {
+            self->client->stats.spawnKillsRecv++;
+            attacker->client->stats.spawnKillsDone++;
+        }
+        
+        // Write katina stats for the target
         katina_write(self->s.clientNum, &self->client->stats);
+    }
     
 //unlagged - backward reconciliation #2
 	// make sure the body shows up in the client's current position
@@ -1350,6 +1359,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
                         
 			targ->enemy = attacker;
 			targ->die (targ, inflictor, attacker, take, mod);
+            
+            
+            
 			return;
 		} else if ( targ->pain ) {
 			targ->pain (targ, attacker, take);

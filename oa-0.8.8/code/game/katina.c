@@ -6,7 +6,7 @@ typedef enum
 {
     KLT_WEAPON_USAGE,
     KLT_MOD_DAMAGE,
-    KLT_CLIENT_INFO,
+    KLT_PLAYER_STATS,
     
     KLT_NUM_LOGTYPES
 } katina_logtype_t;
@@ -45,15 +45,21 @@ void katina_write(int clientNum, katina_t* stats)
         }
     }
     
-    // Client Info Update
-    // KATINA: 2 <client#> <fragsFace> <fragsBack> <fraggedInFace> <fraggedInBack> <pushesDone> <pushesRecv> <healthPickedUp> <armorPickedUp>
+    // Player Stats Update
+    // KATINA: 2 <client#>
+    //         <fragsFace> <fragsBack> <fraggedInFace> <fraggedInBack>
+    //         <spawnKillsDone> <spanwKillsRecv>
+    //         <pushesDone> <pushesRecv>
+    //         <healthPickedUp> <armorPickedUp>
     if(stats->fragsFace || stats->fragsBack || stats->fraggedInFace || stats->fraggedInBack
+       || stats->spawnKillsDone || stats->spawnKillsRecv
        || stats->pushesDone || stats->pushesRecv
        || stats->healthPickedUp || stats->armorPickedUp)
     {
-        G_LogPrintf( "KATINA: %i %i %i %i %i %i %i %i %i %i\n",
-            KLT_CLIENT_INFO, clientNum,
+        G_LogPrintf( "KATINA: %i %i %i %i %i %i %i %i %i %i %i %i\n",
+            KLT_PLAYER_STATS, clientNum,
             stats->fragsFace, stats->fragsBack, stats->fraggedInFace, stats->fraggedInBack,
+            stats->spawnKillsDone, stats->spawnKillsRecv,
             stats->pushesDone, stats->pushesRecv,
             stats->healthPickedUp, stats->armorPickedUp);
     }
