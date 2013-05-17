@@ -1,10 +1,14 @@
 Weapon Usage Update
-KATINA: 0 <client#> <weapon#> <#shotsFired>
+WeaponUsage: <client#> <weapon#> <#shotsFired>
 
 
 MOD (Means of Death = Damage Type) Damage Update
-KATINA: 1 <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv>
+MODDamage: <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv>
 
 
 Player Stats Update
-KATINA: 2 <client#> <#fragsFace> <#fragsBack> <#fraggedInFace> <#fraggedInBack> <#spawnKillsDone> <#spanwKillsRecv> <#pushesDone> <#pushesRecv> <healthPickedUp> <armorPickedUp>
+PlayerStats: <client#>
+             <fragsFace> <fragsBack> <fraggedInFace> <fraggedInBack>
+             <spawnKillsDone> <spanwKillsRecv>
+             <pushesDone> <pushesRecv>
+             <healthPickedUp> <armorPickedUp>
