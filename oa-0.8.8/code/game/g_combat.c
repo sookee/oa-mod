@@ -419,11 +419,14 @@ void CheckAlmostCapture( gentity_t *self, gentity_t *attacker ) {
 		if (ent && !(ent->r.svFlags & SVF_NOCLIENT) ) {
 			// if the player was *very* close
 			VectorSubtract( self->client->ps.origin, ent->s.origin, dir );
-			if ( VectorLength(dir) < 200 ) {
-				self->client->ps.persistant[PERS_PLAYEREVENTS] ^= PLAYEREVENT_HOLYSHIT;
-				if ( attacker->client ) {
-					attacker->client->ps.persistant[PERS_PLAYEREVENTS] ^= PLAYEREVENT_HOLYSHIT;
-				}
+            if ( VectorLength(dir) < 200 ) {
+                self->client->ps.persistant[PERS_PLAYEREVENTS] ^= PLAYEREVENT_HOLYSHIT;
+                self->client->stats.holyShitFragged++;
+
+                if ( attacker->client ) {
+                    attacker->client->ps.persistant[PERS_PLAYEREVENTS] ^= PLAYEREVENT_HOLYSHIT;
+                    attacker->client->stats.holyShitFrags++;
+                }
 			}
 		}
 	}
@@ -1348,7 +1351,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
             attacker->client->stats.numHits[mod]++;
             attacker->client->stats.damageDone[mod] += take;
         }
-			
+
         // Kill
 		if ( targ->health <= 0 ) {
 			if ( client )

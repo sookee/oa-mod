@@ -30,6 +30,8 @@ typedef struct
     int pushesRecv;
     int healthPickedUp;
     int armorPickedUp;
+    int holyShitFrags;      // I fragged the carrier right before he scores
+    int holyShitFragged;    // I got fragged right before i could score
 } katina_t;
 
 

@@ -12,3 +12,4 @@ PlayerStats: <client#>
              <spawnKillsDone> <spanwKillsRecv>
              <pushesDone> <pushesRecv>
              <healthPickedUp> <armorPickedUp>
+			 <holyShitFrags> <holyShitFragged>

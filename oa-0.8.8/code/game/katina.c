@@ -51,17 +51,19 @@ void katina_write(int clientNum, katina_t* stats)
     //              <spawnKillsDone> <spanwKillsRecv>
     //              <pushesDone> <pushesRecv>
     //              <healthPickedUp> <armorPickedUp>
+    //              <holyShitFrags> <holyShitFragged>
     if(stats->fragsFace || stats->fragsBack || stats->fraggedInFace || stats->fraggedInBack
        || stats->spawnKillsDone || stats->spawnKillsRecv
        || stats->pushesDone || stats->pushesRecv
-       || stats->healthPickedUp || stats->armorPickedUp)
+       || stats->healthPickedUp || stats->armorPickedUp || stats->holyShitFrags || stats->holyShitFragged)
     {
-        G_LogPrintf( "PlayerStats: %i %i %i %i %i %i %i %i %i %i %i\n",
+        G_LogPrintf( "PlayerStats: %i %i %i %i %i %i %i %i %i %i %i %i %i\n",
             clientNum,
             stats->fragsFace, stats->fragsBack, stats->fraggedInFace, stats->fraggedInBack,
             stats->spawnKillsDone, stats->spawnKillsRecv,
             stats->pushesDone, stats->pushesRecv,
-            stats->healthPickedUp, stats->armorPickedUp);
+            stats->healthPickedUp, stats->armorPickedUp,
+            stats->holyShitFrags, stats->holyShitFragged);
     }
     
     katina_reset(stats);
