@@ -3,7 +3,7 @@ WeaponUsage: <client#> <weapon#> <#shotsFired>
 
 
 MOD (Means of Death = Damage Type) Damage Update
-MODDamage: <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv>
+MODDamage: <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv> <weightedHits>
 
 
 Player Stats Update

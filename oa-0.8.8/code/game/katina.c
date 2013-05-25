@@ -16,6 +16,11 @@ typedef enum
 void katina_reset(katina_t* stats)
 {
     memset( stats, 0, sizeof(*stats) );
+    
+    // Reset float-values
+    int i;
+    for(i=0; i<MOD_NUM_DAMAGETYPES; ++i)
+        stats->weightedHits[i] = 0.0f;
 }
 
 
@@ -35,13 +40,14 @@ void katina_write(int clientNum, katina_t* stats)
     for(i=0; i<MOD_NUM_DAMAGETYPES; ++i)
     {
         // MOD (Means of Death) Damage Update
-        // MODDamage: <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv>
+        // MODDamage: <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv> <weightedHits>
         if(stats->numHits[i] || stats->numHitsRecv[i] || stats->damageDone[i] || stats->damageRecv[i])
         {
-            G_LogPrintf( "MODDamage: %i %i %i %i %i %i\n",
+            G_LogPrintf( "MODDamage: %i %i %i %i %i %i %f\n",
                 clientNum, i,
                 stats->numHits[i], stats->damageDone[i],
-                stats->numHitsRecv[i], stats->damageRecv[i]);
+                stats->numHitsRecv[i], stats->damageRecv[i],
+                stats->weightedHits[i]);
         }
     }
     

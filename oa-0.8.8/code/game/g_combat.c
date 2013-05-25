@@ -1350,6 +1350,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
         {
             attacker->client->stats.numHits[mod]++;
             attacker->client->stats.damageDone[mod] += take;
+            
+            if(!(dflags & DAMAGE_RADIUS))
+                attacker->client->stats.weightedHits[mod] += 1.0f;
         }
 
         // Kill
@@ -1441,6 +1444,7 @@ G_RadiusDamage
 qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, float radius,
 					 gentity_t *ignore, int mod) {
 	float		points, dist;
+    float       hitWeight;
 	gentity_t	*ent;
 	int			entityList[MAX_GENTITIES];
 	int			numListedEntities;
@@ -1485,7 +1489,8 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
 			continue;
 		}
 
-		points = damage * ( 1.0 - dist / radius );
+        hitWeight = ( 1.0 - dist / radius );
+		points = damage * hitWeight;
 
 		if( CanDamage (ent, origin) ) {
 			if( LogAccuracyHit( ent, attacker ) ) {
@@ -1496,6 +1501,10 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
 			// get knocked into the air more
 			dir[2] += 24;
 			G_Damage (ent, NULL, attacker, dir, origin, (int)points, DAMAGE_RADIUS, mod);
+            
+            // Katina stats: Accumulate weighted splash hits
+            if(attacker != ent && attacker && attacker->client && !OnSameTeam(ent, attacker))
+                attacker->client->stats.weightedHits[mod] += hitWeight;
 		}
 	}
 

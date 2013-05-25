@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // q_shared.h -- included first by ALL program modules.
 // A user mod should never modify this file
 
-  #define PRODUCT_NAME			"ioq3+oa"
+  #define PRODUCT_NAME			"katina 0.1 ioq3+oa"
   #define BASEGAME			"baseoa"
   #define CLIENT_WINDOW_TITLE     	"OpenArena"
   #define CLIENT_WINDOW_MIN_TITLE 	"OA"

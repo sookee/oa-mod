@@ -18,6 +18,7 @@ typedef struct
     int numHitsRecv[MOD_NUM_DAMAGETYPES];
     int damageDone[MOD_NUM_DAMAGETYPES];
     int damageRecv[MOD_NUM_DAMAGETYPES];
+    float weightedHits[MOD_NUM_DAMAGETYPES];
 
     // KLT_CLIENT_INFO
     int fragsFace;          // frags done to enemy face
