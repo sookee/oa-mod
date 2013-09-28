@@ -27,12 +27,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // A user mod should never modify this file
 
 //#ifdef STANDALONE
-  #define PRODUCT_NAME			"katina 0.1 ioq3+oa"
+  #define PRODUCT_NAME			"ioq3+oa+katina"
   #define BASEGAME			"baseoa"
   #define CLIENT_WINDOW_TITLE     	"OpenArena"
   #define CLIENT_WINDOW_MIN_TITLE 	"OA"
 /*#else
-  #define PRODUCT_NAME			"katina 0.1 ioq3+oa"
+  #define PRODUCT_NAME			"ioq3+oa+katina"
   #define BASEGAME			"baseq3"
   #define CLIENT_WINDOW_TITLE     	"ioquake3"
   #define CLIENT_WINDOW_MIN_TITLE 	"ioq3"
