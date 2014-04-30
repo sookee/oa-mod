@@ -1692,6 +1692,11 @@ void ClientBegin( int clientNum ) {
         //Send the list of custom vote options:
         if(strlen(custom_vote_info))
             SendCustomVoteCommands(clientNum);
+
+        /* init and start the 1000ms polling of the player's speed */
+        ent->client->speedMeasures.averageSpeed = 0;
+        ent->client->speedMeasures.measurementCount = 1;
+
 }
 
 /*

@@ -862,11 +862,6 @@ void SetTeam( gentity_t *ent, char *s ) {
 
 	BroadcastTeamChange( client, oldTeam );
 
-	/* init and start the 1000ms polling of the player's speed */
-	ent->client->speedMeasures.averageSpeed = 0;
-	ent->client->speedMeasures.measurementCount = 1;
-	
-
 	// get and distribute relevent paramters
 	ClientUserinfoChanged( clientNum );
 
