@@ -1152,6 +1152,12 @@ void ClientUserinfoChanged( int clientNum ) {
 	s = Info_ValueForKey( userinfo, "cg_cmdTimeNudge" );
 	client->pers.cmdTimeNudge = atoi( s );
 
+	/* XXX Someone may want to put sv_spectatorSpeed into cgame one day 
+	* so that it can be stored in a cfg */
+	/*s = Info_ValueForKey( userinfo, "sv_spectatorSpeed" );
+	client->pers.sv_spectatorSpeed = atoi( s );*/
+
+	
 	// see if the player wants to debug the backward reconciliation
 	/*s = Info_ValueForKey( userinfo, "cg_debugDelag" );
 	if ( !atoi( s ) ) {
@@ -1475,8 +1481,14 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 
     //Check for local client
     if( !strcmp( client->pers.ip, "localhost" ) )
-        client->pers.localClient = qtrue;
-        client->pers.adminLevel = G_admin_level( ent );
+		client->pers.localClient = qtrue;
+	client->pers.adminLevel = G_admin_level( ent );
+
+	/*only set default speed once at first connection */
+	if ( firstTime )
+	{
+		client->pers.sv_spectatorSpeed = 400; //XXX one may want to read it from a player's config
+	}
 
 	client->pers.connected = CON_CONNECTING;
 

@@ -329,7 +329,7 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 
 	if ( client->sess.spectatorState != SPECTATOR_FOLLOW ) {
 		client->ps.pm_type = PM_SPECTATOR;
-		client->ps.speed = 400;	// faster than normal
+		client->ps.speed = client->pers.sv_spectatorSpeed;	// faster than normal
 
 		// set up for pmove
 		memset (&pm, 0, sizeof(pm));

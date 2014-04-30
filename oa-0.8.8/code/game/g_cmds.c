@@ -1524,6 +1524,22 @@ void Cmd_GameCommand_f( gentity_t *ent ) {
 	G_Say( ent, ent, SAY_TELL, gc_orders[order] );
 }
 
+void Cmd_SetSpectSpeed_f( gentity_t *ent ) {
+	int		speed;
+	char	str[MAX_TOKEN_CHARS];
+
+	trap_Argv( 1, str, sizeof( str ) );
+	speed = atoi( str );
+	
+	//G_Say( ent, ent, SAY_TELL, gc_orders[order] );
+	if ( speed > 0 ) {
+		ent->client->pers.sv_spectatorSpeed = speed;
+	} else {
+		ent->client->pers.sv_spectatorSpeed = 400;
+	}
+	
+}
+
 /*
 ==================
 Cmd_Where_f
@@ -2162,6 +2178,8 @@ void Cmd_GetMappage_f( gentity_t *ent ) {
 //KK-OAX This is the table that ClientCommands runs the console entry against. 
 commands_t cmds[ ] = 
 {
+	/* Format: {Name,Flag,Handler} */
+
   // normal commands
   { "team", 0, Cmd_Team_f },
   { "vote", 0, Cmd_Vote_f },
@@ -2204,7 +2222,7 @@ commands_t cmds[ ] =
 
   // game commands
 
-  { "follow", CMD_NOTEAM, Cmd_Follow_f },
+  { "follow", CMD_NOTEAM, Cmd_Follow_f }, //XXX info to player that he needs to specify who to follow with a number
   { "follownext", CMD_NOTEAM, Cmd_FollowCycle_f },
   { "followprev", CMD_NOTEAM, Cmd_FollowCycle_f },
 
@@ -2213,7 +2231,9 @@ commands_t cmds[ ] =
   //KK-OAX
   { "freespectator", CMD_NOTEAM, StopFollowing },
   { "getmappage", 0, Cmd_GetMappage_f },
-  { "gc", 0, Cmd_GameCommand_f }
+  { "gc", 0, Cmd_GameCommand_f },
+
+	{ "spectatorSpeed", 0 , Cmd_SetSpectSpeed_f }
   
 };
 

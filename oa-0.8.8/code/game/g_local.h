@@ -270,6 +270,7 @@ typedef struct {
 	int			delag;
 //	int			debugDelag;
 	int			cmdTimeNudge;
+	int 			sv_spectatorSpeed;
 //unlagged - client options
 //unlagged - lag simulation #2
 /*	int			latentSnaps;
