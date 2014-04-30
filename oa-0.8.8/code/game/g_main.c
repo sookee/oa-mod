@@ -702,7 +702,6 @@ void pollSpeed( gentity_t *ent )
 		avgSpeed = ( (counts*avgSpeed) + playerSpeed ) / (counts+1);
                 client->speedMeasures.measurementCount++;
                 client->speedMeasures.averageSpeed = avgSpeed;
-		trap_SendServerCommand( i , va( "print \"avgspeed %i\n\"", avgSpeed ) );
         }
 }
 
@@ -1509,6 +1508,7 @@ void BeginIntermission( void ) {
 			ClientRespawn(client);
 		}
 		MoveClientToIntermission( client );
+		G_LogPrintf( "Client %i's average speed was %i\n", i , client->client->speedMeasures.averageSpeed );
 	}
 #ifdef MISSIONPACK
 	if (g_singlePlayer.integer) {
@@ -1524,7 +1524,7 @@ void BeginIntermission( void ) {
 #endif
 	// send the current scoring to all clients
 	SendScoreboardMessageToAllClients();
-	//XXX output speed
+	
 
 }
 
