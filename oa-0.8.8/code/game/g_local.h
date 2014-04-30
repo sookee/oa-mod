@@ -73,6 +73,12 @@ typedef enum {
 
 typedef struct gentity_s gentity_t;
 typedef struct gclient_s gclient_t;
+typedef struct gclientspeed_s gclientspeed_t;
+
+struct gclientspeed_s {
+	int averageSpeed;
+	int measurementCount;
+};
 
 struct gentity_s {
 	entityState_t	s;				// communicated by server to clients
@@ -329,6 +335,9 @@ struct gclient_s {
 	// the rest of the structure is private to game
 	clientPersistant_t	pers;
 	clientSession_t		sess;
+	
+	//speed
+	gclientspeed_t		speedMeasures;
 
 	qboolean	readyToExit;		// wishes to leave the intermission
 

@@ -681,6 +681,27 @@ int G_UpdateTimestamp( void ) {
     return ret;
 }
 
+void pollSpeed( gentity_t *ent )
+{
+	gclient_t* client;
+	int i, avgSpeed, counts;
+
+	//poll again in 1000ms
+        ent->think = pollSpeed;
+        ent->nextthink = level.time + 1000;
+
+	/*update avg speed for all clients*/
+	for ( i=0 ; i<level.maxclients ; i++ ) {
+		client = &level.clients[i];
+		avgSpeed = client->speedMeasures.averageSpeed;
+		counts = client->speedMeasures.measurementCount;
+
+		avgSpeed = ((counts*avgSpeed)+(client->ps.speed)) / (counts+1);
+                client->speedMeasures.measurementCount++;
+                client->speedMeasures.averageSpeed = avgSpeed;
+        }
+}
+
 /*
 ============
 G_InitGame
@@ -689,6 +710,8 @@ G_InitGame
 */
 void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	int					i;
+
+	gentity_t* pollevent;
 
         
         G_Printf ("------- Game Initialization -------\n");
@@ -870,6 +893,12 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
             trap_Cvar_Set("voteflags",va("%i",voteflags));
         }
+
+	/* init and start the 1000ms polling of the player's speed */
+	pollevent = G_Spawn();
+	pollevent->think = pollSpeed; 
+	pollevent->nextthink = level.time + 1000;  
+
 }
 
 
@@ -1491,6 +1520,7 @@ void BeginIntermission( void ) {
 #endif
 	// send the current scoring to all clients
 	SendScoreboardMessageToAllClients();
+	//XXX output speed
 
 }
 
