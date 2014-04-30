@@ -2226,6 +2226,7 @@ commands_t cmds[ ] =
 
   { "score", CMD_INTERMISSION, Cmd_Score_f },
   { "acc", CMD_INTERMISSION, Cmd_Acc_f},
+  { "accnow", 0 , Cmd_Acc_f},
 
   // cheats
   { "give", CMD_CHEAT|CMD_LIVING, Cmd_Give_f },
