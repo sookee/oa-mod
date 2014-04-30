@@ -923,6 +923,7 @@ void Cmd_Team_f( gentity_t *ent ) {
     
     force = G_admin_permission(ent, ADMF_FORCETEAMCHANGE);
 	
+
 	if( !force ) {
 	    if ( ent->client->switchTeamTime > level.time ) {
 		    trap_SendServerCommand( ent-g_entities, "print \"May not switch teams more than once per 5 seconds.\n\"" );
@@ -936,11 +937,16 @@ void Cmd_Team_f( gentity_t *ent ) {
 		ent->client->sess.losses++;
 	}
 
+
 	trap_Argv( 1, s, sizeof( s ) );
+	//only allow real team switches and do not increase wait-time for missclicking on the same team
+	if ( !((oldTeam==TEAM_BLUE) && (s == "blue")) && 
+		!((oldTeam==TEAM_RED) && (s == "red")) && 
+		!((oldTeam==TEAM_SPECTATOR) && (s == "spectator"))) {
+			SetTeam( ent, s );
+			ent->client->switchTeamTime = level.time + 5000;
+	}
 
-	SetTeam( ent, s );
-
-	ent->client->switchTeamTime = level.time + 5000;
 }
 
 
