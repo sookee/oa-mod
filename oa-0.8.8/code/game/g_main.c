@@ -684,25 +684,26 @@ int G_UpdateTimestamp( void ) {
 /*Funtion to poll all player's speeds in an interval of 1000ms*/
 void pollSpeed( gentity_t *ent )
 {
-	gclient_t* client;
-	int i, avgSpeed, counts, playerSpeed;
-	vec_t *vel;
+        gclient_t* client;
+        int i, avgSpeed, counts, playerSpeed;
+        vec_t *vel;
 
-	//poll again in 1000ms
+        //poll again in 1000ms
         ent->think = pollSpeed;
         ent->nextthink = level.time + 1000;
 
-	/*update avg speed for all clients*/
-	for ( i=0 ; i<level.maxclients ; i++ ) {
-		client = &level.clients[i];
-		vel = client->ps.velocity;
-		avgSpeed = client->stats.averageSpeed;
-		counts = client->stats.measurementCount +1;
-		playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account too?
+        /*update avg speed for all clients*/
+        for ( i=0 ; i<level.maxclients ; i++ ) {
+                client = &level.clients[i];
+                vel = client->ps.velocity;
+                avgSpeed = client->stats.averageSpeed;
+                counts = client->stats.measurementCount;
+                playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account too?
 
-		avgSpeed = ( (counts*avgSpeed) + playerSpeed ) / (counts);
+                avgSpeed = ( (counts*avgSpeed) + playerSpeed ) / (counts+1);
                 client->stats.measurementCount++;
                 client->stats.averageSpeed = avgSpeed;
+                trap_SendServerCommand( i , va( "print \"avgspeed %i\n\"", avgSpeed ) );
         }
 }
 
@@ -1525,8 +1526,6 @@ void BeginIntermission( void ) {
 		SpawnModelsOnVictoryPads();
 	}
 #endif
-	// send the current scoring to all clients
-	SendScoreboardMessageToAllClients();
 
 	// Write katina stats for each connected player to log
 	for(i=0; i< level.maxclients ; ++i) {
@@ -1534,6 +1533,9 @@ void BeginIntermission( void ) {
 		if(client->inuse && client->client)
 		    katina_write(i, &client->client->stats);
 	}
+
+	// send the current scoring to all clients
+	SendScoreboardMessageToAllClients();
 }
 
 
