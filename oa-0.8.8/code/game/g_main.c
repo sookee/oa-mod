@@ -703,7 +703,7 @@ void pollSpeed( gentity_t *ent )
                 avgSpeed = ( (counts*avgSpeed) + playerSpeed ) / (counts+1);
                 client->stats.measurementCount++;
                 client->stats.averageSpeed = avgSpeed;
-                trap_SendServerCommand( i , va( "print \"avgspeed %i\n\"", avgSpeed ) );
+                //trap_SendServerCommand( i , va( "print \"avgspeed %i\n\"", avgSpeed ) );
         }
 }
 
