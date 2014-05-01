@@ -1548,6 +1548,19 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		    
 	}
 
+	// if a player reconnects quickly after a disconnect, the client disconnect may never be called, thus flag can get lost in the ether
+	if (ent->inuse) {
+	G_LogPrintf("Forcing disconnect on active client: %i\n", clientNum);
+	// so lets just fix up anything that should happen on a disconnect
+	ClientDisconnect(clientNum);
+	}
+	// they can connect
+	ent->client = level.clients + clientNum;
+	client = ent->client;
+
+	memset(client, 0, sizeof(*client));
+
+
     //Check for local client
     if( !strcmp( client->pers.ip, "localhost" ) )
 		client->pers.localClient = qtrue;
