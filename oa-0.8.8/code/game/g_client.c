@@ -284,10 +284,10 @@ gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles ) 
 
 void katina_reset(stats_t* stats)
 {
+    int i;
     memset( stats, 0, sizeof(*stats) );
 
     // Reset float-values
-    int i;
     for(i=0; i<MOD_NUM_DAMAGETYPES; ++i)
         stats->weightedHits[i] = 0.0f;
 }
@@ -327,20 +327,15 @@ void katina_write(int clientNum, stats_t* stats)
     //              <pushesDone> <pushesRecv>
     //              <healthPickedUp> <armorPickedUp>
     //              <holyShitFrags> <holyShitFragged>
-    if(stats->fragsFace || stats->fragsBack || stats->fraggedInFace || stats->fraggedInBack
-       || stats->spawnKillsDone || stats->spawnKillsRecv
-       || stats->pushesDone || stats->pushesRecv
-       || stats->healthPickedUp || stats->armorPickedUp || stats->holyShitFrags || stats->holyShitFragged)
-    {
-        G_LogPrintf( "PlayerStats: %i %i %i %i %i %i %i %i %i %i %i %i %i\n",
+	G_LogPrintf( "PlayerStats: %i %i %i %i %i %i %i %i %i %i %i %i %i\n",
             clientNum,
             stats->fragsFace, stats->fragsBack, stats->fraggedInFace, stats->fraggedInBack,
             stats->spawnKillsDone, stats->spawnKillsRecv,
             stats->pushesDone, stats->pushesRecv,
             stats->healthPickedUp, stats->armorPickedUp,
             stats->holyShitFrags, stats->holyShitFragged);
-    }
-
+	G_LogPrintf( "Client (%i)'s average speed was (%i)u/s, distance covered (%i)u\n",
+		clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount );
     katina_reset(stats);
 }
 
@@ -1662,6 +1657,7 @@ void ClientBegin( int clientNum ) {
     int         i;
     
     // Write katina stats for each connected player to log
+	//we want to do this to have fresh stats for every team constellation and balancers/unbalancers!
 	for(i=0; i< level.maxclients ; ++i) {
 		ent = g_entities + i;
         if(ent->inuse && ent->client)

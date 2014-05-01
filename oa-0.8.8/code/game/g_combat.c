@@ -495,7 +495,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
         }
         
         // Write katina stats for the target
-        katina_write(self->s.clientNum, &self->client->stats);
+        //katina_write(self->s.clientNum, &self->client->stats);
     }
     
 //unlagged - backward reconciliation #2

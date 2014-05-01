@@ -821,6 +821,7 @@ void player_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 void AddScore( gentity_t *ent, vec3_t origin, int score );
 void CalculateRanks( void );
 qboolean SpotWouldTelefrag( gentity_t *spot );
+void katina_write(int clientNum, stats_t* stats);
 
 //
 // g_svcmds.c

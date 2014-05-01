@@ -1512,10 +1512,6 @@ void BeginIntermission( void ) {
 			ClientRespawn(client);
 		}
 		MoveClientToIntermission( client );
-
-		speedomat = client->client->stats;
-		G_LogPrintf( "Client (%i)'s average speed was (%i)u/s, distance covered (%i)u\n", 
-			i , speedomat.averageSpeed , speedomat.averageSpeed * speedomat.measurementCount );
 	}
 #ifdef MISSIONPACK
 	if (g_singlePlayer.integer) {
@@ -1531,8 +1527,13 @@ void BeginIntermission( void ) {
 #endif
 	// send the current scoring to all clients
 	SendScoreboardMessageToAllClients();
-	
 
+	// Write katina stats for each connected player to log
+	for(i=0; i< level.maxclients ; ++i) {
+		client = g_entities + i;
+		if(client->inuse && client->client)
+		    katina_write(i, &client->client->stats);
+	}
 }
 
 
@@ -1708,12 +1709,12 @@ void LogExit( const char *string ) {
 	qboolean won = qtrue;
 #endif
 
-    // Write katina stats for each connected player to log
+    /* Write katina stats for each connected player to log
 	for(i=0; i< level.maxclients ; ++i) {
 		clientEnt = g_entities + i;
         if(clientEnt->inuse && clientEnt->client)
             katina_write(i, &clientEnt->client->stats); 
-    }
+    }*/
     
 	G_LogPrintf( "Exit: %s\n", string );
 
@@ -1776,7 +1777,7 @@ void LogExit( const char *string ) {
 =================
 CheckIntermissionExit
 
-The level will stay at the intermission for a minimum of 5 seconds
+The level will stay at the intermission for a minimum of 3 seconds
 If all players wish to continue, the level will then exit.
 If one or more players have not acknowledged the continue, the game will
 wait 10 seconds before going on.
@@ -1828,7 +1829,7 @@ void CheckIntermissionExit( void ) {
 	}
 
 	// never exit in less than five seconds
-	if ( level.time < level.intermissiontime + 5000 ) {
+	if ( level.time < level.intermissiontime + 3000 ) {
 		return;
 	}
 
