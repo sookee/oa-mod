@@ -294,7 +294,7 @@ void katina_reset(stats_t* stats)
 
 
 
-void katina_write(int clientNum, client_t* stats)
+void katina_write(int clientNum, stats_t* stats)
 {
     int i;
 
