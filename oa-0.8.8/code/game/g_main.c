@@ -1502,8 +1502,10 @@ void BeginIntermission( void ) {
 	// move all clients to the intermission point
 	for (i=0 ; i< level.maxclients ; i++) {
 		client = g_entities + i;
+        
 		if (!client->inuse)
 			continue;
+        
 		// respawn if dead
 		if (client->health <= 0) {
 			ClientRespawn(client);
@@ -1699,9 +1701,19 @@ Append information about this game to the log file
 void LogExit( const char *string ) {
 	int				i, numSorted;
 	gclient_t		*cl;
+    gentity_t       *clientEnt;
+    
 #ifdef MISSIONPACK
 	qboolean won = qtrue;
- #endif
+#endif
+
+    // Write katina stats for each connected player to log
+	for(i=0; i< level.maxclients ; ++i) {
+		clientEnt = g_entities + i;
+        if(clientEnt->inuse && clientEnt->client)
+            katina_write(i, &clientEnt->client->stats); 
+    }
+    
 	G_LogPrintf( "Exit: %s\n", string );
 
 	level.intermissionQueued = level.time;

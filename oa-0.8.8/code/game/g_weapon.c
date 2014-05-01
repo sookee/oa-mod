@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // perform the server side effects of a weapon firing
 
 #include "g_local.h"
+#include "katina.h"
 
 static	float	s_quadFactor;
 static	vec3_t	forward, right, up;
@@ -284,18 +285,16 @@ void Bullet_Fire (gentity_t *ent, float spread, int damage ) {
 				continue;
 			}
 			else {
-                            if(spread == CHAINGUN_SPREAD)
-                            {
-                                G_Damage( traceEnt, ent, ent, forward, tr.endpos,
-					damage, 0, MOD_CHAINGUN);
-                                ent->client->accuracy[WP_CHAINGUN][1]++;
-                            }
-                            else
-                            {
-				G_Damage( traceEnt, ent, ent, forward, tr.endpos,
-					damage, 0, MOD_MACHINEGUN);
-                                ent->client->accuracy[WP_MACHINEGUN][1]++;
-                            }
+				if(spread == CHAINGUN_SPREAD)
+				{
+					G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_CHAINGUN);
+					ent->client->accuracy[WP_CHAINGUN][1]++;
+				}
+				else
+				{
+					G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_MACHINEGUN);
+					ent->client->accuracy[WP_MACHINEGUN][1]++;
+				}
 			}
 		}
 		break;
@@ -931,6 +930,9 @@ void FireWeapon( gentity_t *ent ) {
                         ent->client->accuracy[ent->s.weapon][0]++;
 		}
 	}
+    
+    // Katina stats
+    ent->client->stats.numShots[ent->s.weapon]++;
 
 	// set aiming directions
 	AngleVectors (ent->client->ps.viewangles, forward, right, up);

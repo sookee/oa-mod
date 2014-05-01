@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "g_local.h"
 #include "challenges.h"
+#include "katina.h"
 
 /*
 ============
@@ -418,11 +419,14 @@ void CheckAlmostCapture( gentity_t *self, gentity_t *attacker ) {
 		if (ent && !(ent->r.svFlags & SVF_NOCLIENT) ) {
 			// if the player was *very* close
 			VectorSubtract( self->client->ps.origin, ent->s.origin, dir );
-			if ( VectorLength(dir) < 200 ) {
-				self->client->ps.persistant[PERS_PLAYEREVENTS] ^= PLAYEREVENT_HOLYSHIT;
-				if ( attacker->client ) {
-					attacker->client->ps.persistant[PERS_PLAYEREVENTS] ^= PLAYEREVENT_HOLYSHIT;
-				}
+            if ( VectorLength(dir) < 200 ) {
+                self->client->ps.persistant[PERS_PLAYEREVENTS] ^= PLAYEREVENT_HOLYSHIT;
+                self->client->stats.holyShitFragged++;
+
+                if ( attacker->client ) {
+                    attacker->client->ps.persistant[PERS_PLAYEREVENTS] ^= PLAYEREVENT_HOLYSHIT;
+                    attacker->client->stats.holyShitFrags++;
+                }
 			}
 		}
 	}
@@ -481,7 +485,20 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	if ( level.intermissiontime ) {
 		return;
 	}
-
+    
+    if(self->client)
+    {
+        // For katina stats: Check for spawnkills
+        if( attacker && attacker->client && (self->client->katina.spawnTime + KATINA_SPAWNKILL_TIME) > level.time)
+        {
+            self->client->stats.spawnKillsRecv++;
+            attacker->client->stats.spawnKillsDone++;
+        }
+        
+        // Write katina stats for the target
+        katina_write(self->s.clientNum, &self->client->stats);
+    }
+    
 //unlagged - backward reconciliation #2
 	// make sure the body shows up in the client's current position
 	G_UnTimeShiftClient( self );
@@ -1025,6 +1042,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	int			max;
         
 	vec3_t		bouncedir, impactpoint;
+    
 
 	if (!targ->takedamage) {
 		return;
@@ -1114,6 +1132,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if ( knockback && targ->client ) {
 		vec3_t	kvel;
 		float	mass;
+        qboolean onSameTeam = OnSameTeam(targ, attacker);
 
 		mass = 200;
 
@@ -1135,22 +1154,35 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			targ->client->ps.pm_time = t;
 			targ->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
 		}
-                //Remeber the last person to hurt the player
-                if( !g_awardpushing.integer || targ==attacker || OnSameTeam (targ, attacker)) {
-                    targ->client->lastSentFlying = -1;
-                } else {
-	/*if ( pm->waterlevel <= 1 ) {
-		if ( pml.walking && !(pml.groundTrace.surfaceFlags & SURF_SLICK) ) {
-			// if getting knocked back, no friction
-			if ( ! (pm->ps->pm_flags & PMF_TIME_KNOCKBACK) ) {
-				control = speed < pm_stopspeed ? pm_stopspeed : speed;
-				drop += control*pm_friction*pml.frametime;
-			}
-		}
-	}*/
-                    targ->client->lastSentFlying = attacker->s.number;
-                    targ->client->lastSentFlyingTime = level.time;
+        
+        // Katina stats: Count pushes (with railgun only)
+        if(onSameTeam && mod == MOD_RAILGUN)
+        {
+            targ->client->stats.pushesRecv++;
+            
+            if(attacker->client)
+                attacker->client->stats.pushesDone++;
+        }
+        
+        
+        //Remeber the last person to hurt the player
+        if( !g_awardpushing.integer || targ==attacker || onSameTeam) {
+            targ->client->lastSentFlying = -1;
+        }
+        else {
+            /*if ( pm->waterlevel <= 1 ) {
+            if ( pml.walking && !(pml.groundTrace.surfaceFlags & SURF_SLICK) ) {
+                // if getting knocked back, no friction
+                if ( ! (pm->ps->pm_flags & PMF_TIME_KNOCKBACK) ) {
+                    control = speed < pm_stopspeed ? pm_stopspeed : speed;
+                    drop += control*pm_friction*pml.frametime;
                 }
+            }
+            }*/
+            
+            targ->client->lastSentFlying = attacker->s.number;
+            targ->client->lastSentFlyingTime = level.time;
+        }
 	}
 
 	// check for completely getting out of the damage
@@ -1300,12 +1332,30 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	}
 
 	// do the damage
-	if (take) {
+	if (take)
+    {
 		targ->health = targ->health - take;
-		if ( targ->client ) {
+		if(targ->client) {
 			targ->client->ps.stats[STAT_HEALTH] = targ->health;
 		}
-			
+        
+        // Katina stats
+        if(targ->client)
+        {
+            targ->client->stats.numHitsRecv[mod]++;
+            targ->client->stats.damageRecv[mod] += take;
+        }
+        
+        if(attacker != targ && attacker && attacker->client && !OnSameTeam(targ, attacker))
+        {
+            attacker->client->stats.numHits[mod]++;
+            attacker->client->stats.damageDone[mod] += take;
+            
+            if(!(dflags & DAMAGE_RADIUS))
+                attacker->client->stats.weightedHits[mod] += 1.0f;
+        }
+
+        // Kill
 		if ( targ->health <= 0 ) {
 			if ( client )
 				targ->flags |= FL_NO_KNOCKBACK;
@@ -1315,6 +1365,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
                         
 			targ->enemy = attacker;
 			targ->die (targ, inflictor, attacker, take, mod);
+            
+            
+            
 			return;
 		} else if ( targ->pain ) {
 			targ->pain (targ, attacker, take);
@@ -1391,6 +1444,7 @@ G_RadiusDamage
 qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, float radius,
 					 gentity_t *ignore, int mod) {
 	float		points, dist;
+    float       hitWeight;
 	gentity_t	*ent;
 	int			entityList[MAX_GENTITIES];
 	int			numListedEntities;
@@ -1435,7 +1489,8 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
 			continue;
 		}
 
-		points = damage * ( 1.0 - dist / radius );
+        hitWeight = ( 1.0 - dist / radius );
+		points = damage * hitWeight;
 
 		if( CanDamage (ent, origin) ) {
 			if( LogAccuracyHit( ent, attacker ) ) {
@@ -1446,6 +1501,10 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
 			// get knocked into the air more
 			dir[2] += 24;
 			G_Damage (ent, NULL, attacker, dir, origin, (int)points, DAMAGE_RADIUS, mod);
+            
+            // Katina stats: Accumulate weighted splash hits
+            if(attacker != ent && attacker && attacker->client && !OnSameTeam(ent, attacker))
+                attacker->client->stats.weightedHits[mod] += hitWeight;
 		}
 	}
 

@@ -1348,14 +1348,14 @@ Sago: I am not happy with this exception
         if( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && g_instantgib.integer) {
             switch(team) {
                 case TEAM_RED:
-                    c1[0] = COLOR_BLUE;
-                    c2[0] = COLOR_BLUE;
+                    c1[0] = COLOR_CYAN; //COLOR_BLUE;
+                    c2[0] = COLOR_CYAN; //COLOR_BLUE;
                     c1[1] = 0;
                     c2[1] = 0;
                     break;
                 case TEAM_BLUE:
-                    c1[0] = COLOR_RED;
-                    c2[0] = COLOR_RED;
+                    c1[0] = COLOR_GREEN; //COLOR_RED;
+                    c2[0] = COLOR_GREEN; //COLOR_RED;
                     c1[1] = 0;
                     c2[1] = 0;
                     break;
@@ -1366,6 +1366,14 @@ Sago: I am not happy with this exception
             strcpy(c1, Info_ValueForKey( userinfo, "color1" ));
             strcpy(c2, Info_ValueForKey( userinfo, "color2" ));
         }
+    
+    // Always NULL terminated!
+    if(c1[0] != COLOR_CYAN && c1[0] != COLOR_GREEN)
+        c1[0] = COLOR_CYAN;
+    c2[0] = c1[0];
+        
+    c1[1] = 0;
+    c2[1] = 0;
 
 	strcpy(redTeam, Info_ValueForKey( userinfo, "g_redteam" ));
 	strcpy(blueTeam, Info_ValueForKey( userinfo, "g_blueteam" ));
@@ -1584,12 +1592,20 @@ and on transition between teams, but doesn't happen on respawns
 void ClientBegin( int clientNum ) {
 	gentity_t	*ent;
 	gclient_t	*client;
-	gentity_t       *tent;
+	gentity_t   *tent;
 	int			flags;
-	int		countRed, countBlue, countFree;
-        char		userinfo[MAX_INFO_STRING];
+	int		    countRed, countBlue, countFree;
+    char		userinfo[MAX_INFO_STRING];
+    int         i;
+    
+    // Write katina stats for each connected player to log
+	for(i=0; i< level.maxclients ; ++i) {
+		ent = g_entities + i;
+        if(ent->inuse && ent->client)
+            katina_write(i, &ent->client->stats); 
+    }
 
-        trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
+    trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
 	ent = g_entities + clientNum;
 
@@ -1877,6 +1893,7 @@ void ClientSpawn(gentity_t *ent) {
     memcpy(persistant,client->ps.persistant,MAX_PERSISTANT*sizeof(int));
 	eventSequence = client->ps.eventSequence;
 
+    // CLEAR ALL CLIENT DATA
 	Com_Memset (client, 0, sizeof(*client));
 
 	client->pers = saved;
@@ -1912,6 +1929,9 @@ void ClientSpawn(gentity_t *ent) {
 	// clear entity values
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 	client->ps.eFlags = flags;
+    
+    // For katina stats: remember time of last spawn
+    client->katina.spawnTime = level.time;
 
 	ent->s.groundEntityNum = ENTITYNUM_NONE;
 	ent->client = &level.clients[index];
@@ -2011,12 +2031,19 @@ else
 	//Instantgib mode, replace weapons with rail (and maybe gauntlet)
 	if(g_instantgib.integer)
 	{
-		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
-		client->ps.ammo[WP_RAILGUN] = 999; //Don't display any ammo
-		if(g_instantgib.integer>1)
+        // For values > 2: Players spawn with gauntlet only
+        if(g_instantgib.integer <= 2)
+        {
+            client->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
+            client->ps.ammo[WP_RAILGUN] = 999; //Don't display any ammo
+        }
+        else
+            client->ps.stats[STAT_WEAPONS] = 0;
+        
+		if(g_instantgib.integer > 1)
 		{
 			 client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
-	              	client->ps.ammo[WP_GAUNTLET] = -1;
+	         client->ps.ammo[WP_GAUNTLET] = -1;
 		}
 	}
 
@@ -2126,11 +2153,18 @@ server system housekeeping.
 void ClientDisconnect( int clientNum ) {
 	gentity_t	*ent;
 	int			i;
-        char	userinfo[MAX_INFO_STRING];
+    char	    userinfo[MAX_INFO_STRING];
 
 	// cleanup if we are kicking a bot that
 	// hasn't spawned yet
 	G_RemoveQueuedBotBegin( clientNum );
+    
+    // Write katina stats for each connected player to log
+	for(i=0; i< level.maxclients ; ++i) {
+		ent = g_entities + i;
+        if(ent->inuse && ent->client)
+            katina_write(i, &ent->client->stats); 
+    }
 
 	ent = g_entities + clientNum;
 	if ( !ent->client ) {

@@ -1254,7 +1254,8 @@ void ClientEndFrame( gentity_t *ent ) {
 //unlagged - smooth clients #1
 	int frames;
 //unlagged - smooth clients #1
-
+    
+    
 	if ( (ent->client->sess.sessionTeam == TEAM_SPECTATOR) || ent->client->isEliminated ) {
 		SpectatorClientEndFrame( ent );
 		return;

@@ -23,12 +23,17 @@ ifeq ($(COMPILE_PLATFORM),mingw32)
   endif
 endif
 
-  BUILD_STANDALONE = 1
+  BUILD_STANDALONE = 0
   BUILD_CLIENT     = 0
   BUILD_CLIENT_SMP = 0
   BUILD_SERVER     = 0
   BUILD_GAME_SO    = 1
-  BUILD_GAME_QVM   = 1
+  BUILD_GAME_SO_CGAME = 0
+  BUILD_GAME_SO_GAME  = 1
+  BUILD_GAME_SO_UI    = 0
+  BUILD_GAME_QVM   = 0
+  BUILD_MISSIONPACK = 0
+
 ifndef BUILD_MISSIONPACK
   BUILD_MISSIONPACK=
 endif
@@ -792,10 +797,16 @@ ifneq ($(BUILD_CLIENT),0)
 endif
 
 ifneq ($(BUILD_GAME_SO),0)
-  TARGETS += \
-    $(B)/baseq3/cgame$(ARCH).$(SHLIBEXT) \
-    $(B)/baseq3/qagame$(ARCH).$(SHLIBEXT) \
-    $(B)/baseq3/ui$(ARCH).$(SHLIBEXT)
+  ifneq ($(BUILD_GAME_SO_CGAME),0)
+    TARGETS += $(B)/baseq3/cgame$(ARCH).$(SHLIBEXT)
+  endif
+  ifneq ($(BUILD_GAME_SO_GAME),0)
+    TARGETS += $(B)/baseq3/qagame$(ARCH).$(SHLIBEXT)
+  endif
+  ifneq ($(BUILD_GAME_SO_UI),0)
+    TARGETS += $(B)/baseq3/ui$(ARCH).$(SHLIBEXT)
+  endif
+
   ifneq ($(BUILD_MISSIONPACK),0)
     TARGETS += \
     $(B)/missionpack/cgame$(ARCH).$(SHLIBEXT) \
@@ -1756,6 +1767,7 @@ Q3GOBJ_ = \
   $(B)/baseq3/game/g_utils.o \
   $(B)/baseq3/game/g_vote.o \
   $(B)/baseq3/game/g_weapon.o \
+  $(B)/baseq3/game/katina.o \
   \
   $(B)/baseq3/qcommon/q_math.o \
   $(B)/baseq3/qcommon/q_shared.o
@@ -1815,6 +1827,7 @@ MPGOBJ_ = \
   $(B)/missionpack/game/g_utils.o \
   $(B)/missionpack/game/g_vote.o \
   $(B)/missionpack/game/g_weapon.o \
+  $(B)/missionpack/game/katina.o \
   \
   $(B)/missionpack/qcommon/q_math.o \
   $(B)/missionpack/qcommon/q_shared.o
