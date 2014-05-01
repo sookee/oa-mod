@@ -1512,7 +1512,7 @@ void BeginIntermission( void ) {
 		}
 		MoveClientToIntermission( client );
 
-		speedomat = client->client.speedMeasures;
+		speedomat = client->client->speedMeasures;
 		G_LogPrintf( "Client (%i)'s average speed was (%i)u/s, distance covered (%i)u\n", 
 			i , speedomat.averageSpeed , speedomat.averageSpeed * speedomat.measurementCount );
 	}
