@@ -941,23 +941,24 @@ void Cmd_Team_f( gentity_t *ent ) {
 
 	trap_Argv( 1, s, sizeof( s ) );
 	//only allow real team switches and do not increase wait-time for missclicking on the same team
-	if ( !((oldTeam==TEAM_BLUE) && (Q_strequal( s , "blue" ))) && 
-		!((oldTeam==TEAM_RED) && (Q_strequal( s , "red" ))) && 
-		!((oldTeam==TEAM_SPECTATOR) && (Q_strequal( s , "spectator")))) {
-			SetTeam( ent, s );
-			ent->client->switchTeamTime = level.time + 5000;
-	} else {
-		switch ( oldTeam ) {
-		case TEAM_BLUE:
-			trap_SendServerCommand( ent-g_entities, "print \"You are already in the Blue Team.\n\"" );
-			break;
-		case TEAM_RED:
-			trap_SendServerCommand( ent-g_entities, "print \"You are already in the Red team.\n\"" );
-			break;
-		default:
-			trap_SendServerCommand( ent-g_entities, "print \"You are already in Spectator Mode.\n\"" );
+	if ( ((oldTeam==TEAM_BLUE) && Q_strequal( s , "blue" )) || 
+		((oldTeam==TEAM_RED) && Q_strequal( s , "red" )) || 
+		((oldTeam==TEAM_SPECTATOR) && Q_strequal( s , "spectator"))) {
+			switch ( oldTeam ) {
+			case TEAM_BLUE:
+				trap_SendServerCommand( ent-g_entities, "print \"You are already in the Blue Team.\n\"" );
+				break;
+			case TEAM_RED:
+				trap_SendServerCommand( ent-g_entities, "print \"You are already in the Red team.\n\"" );
+				break;
+			default:
+				trap_SendServerCommand( ent-g_entities, "print \"You are already in Spectator Mode.\n\"" );
 		}
 
+	} else {
+		SetTeam( ent, s );
+		ent->client->switchTeamTime = level.time + 5000;
+		
 	}
 
 }
