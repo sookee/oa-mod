@@ -1497,8 +1497,11 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	//KK-OAX Swapped these in order...seemed to help the connection process.
 	// get and distribute relevent paramters
 	ClientUserinfoChanged( clientNum );
-	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 	
+	// SooKee add IP address to log
+	// G_LogPrintf( "ClientConnect: %i\n", clientNum );
+	G_LogPrintf( "ClientConnect: %i %s\n", clientNum , client->pers.ip);
+
 
 	// don't do the "xxx connected" messages if they were caried over from previous level
 	if ( firstTime ) {
