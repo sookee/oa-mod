@@ -901,9 +901,10 @@ void Cmd_Team_f( gentity_t *ent ) {
 	int			oldTeam;
 	char		s[MAX_TOKEN_CHARS];
 	qboolean    force;
+		
+	oldTeam = ent->client->sess.sessionTeam;
 
 	if ( trap_Argc() != 2 ) {
-		oldTeam = ent->client->sess.sessionTeam;
 		switch ( oldTeam ) {
 		case TEAM_BLUE:
 			trap_SendServerCommand( ent-g_entities, "print \"Blue team\n\"" );
@@ -923,9 +924,7 @@ void Cmd_Team_f( gentity_t *ent ) {
     
     force = G_admin_permission(ent, ADMF_FORCETEAMCHANGE);
 	
-
 	trap_Argv( 1, s, sizeof( s ) );
-	
 
 	//only allow real team switches and do not increase wait-time for missclicking on the same team
 	if ( ((oldTeam==TEAM_BLUE) && (Q_strequal( s , "blue" ) || Q_strequal( s , "b" ))) || 
@@ -945,6 +944,7 @@ void Cmd_Team_f( gentity_t *ent ) {
 		if( !force ) {
 			if ( ent->client->switchTeamTime > level.time ) {
 				trap_SendServerCommand( ent-g_entities, "print \"May not switch teams more than once per 5 seconds.\n\"" );
+				return;
 			} else {
 				SetTeam( ent, s );
 				ent->client->switchTeamTime = level.time + 5000;
