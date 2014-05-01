@@ -831,14 +831,13 @@ void SetTeam( gentity_t *ent, char *s ) {
 		ent->flags &= ~FL_GODMODE;
 		ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
 		player_die (ent, ent, ent, 100000, MOD_SUICIDE);
-                if(teamscore != -99)
-                    level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
+                if(teamscore != -99) {
+			level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
+		}
+		PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),client->ps);
 
 	}
 
-        if(oldTeam!=TEAM_SPECTATOR)
-            PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),client->ps);
-        
 	// they go to the end of the line for tournements
         if(team == TEAM_SPECTATOR && oldTeam != team)
                 AddTournamentQueue(client);
@@ -929,9 +928,9 @@ void Cmd_Team_f( gentity_t *ent ) {
 	
 
 	//only allow real team switches and do not increase wait-time for missclicking on the same team
-	if ( ((oldTeam==TEAM_BLUE) && Q_strequal( s , "blue" )) || 
-		((oldTeam==TEAM_RED) && Q_strequal( s , "red" )) || 
-		((oldTeam==TEAM_SPECTATOR) && Q_strequal( s , "spectator"))) {
+	if ( ((oldTeam==TEAM_BLUE) && (Q_strequal( s , "blue" ) || Q_strequal( s , "b" ))) || 
+		((oldTeam==TEAM_RED) && (Q_strequal( s , "red" ) || Q_strequal( s , "r" ))) || 
+		((oldTeam==TEAM_SPECTATOR) && (Q_strequal( s , "spectator") || Q_strequal( s , "s" )))) {
 			switch ( oldTeam ) {
 			case TEAM_BLUE:
 				trap_SendServerCommand( ent-g_entities, "print \"You are already in the Blue Team.\n\"" );
