@@ -1554,7 +1554,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	client->pers.adminLevel = G_admin_level( ent );
 
 	/*only set default speed once at first connection */
-	if ( firstTime )
+	if ( firstTime || (client->pers.sv_spectatorSpeed == 0))
 	{
 		client->pers.sv_spectatorSpeed = 400; //XXX one may want to read it from a player's config
 	}
