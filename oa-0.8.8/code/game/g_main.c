@@ -681,6 +681,7 @@ int G_UpdateTimestamp( void ) {
     return ret;
 }
 
+/*Funtion to poll all player's speeds in an interval of 1000ms*/
 void pollSpeed( gentity_t *ent )
 {
 	gclient_t* client;
@@ -695,13 +696,13 @@ void pollSpeed( gentity_t *ent )
 	for ( i=0 ; i<level.maxclients ; i++ ) {
 		client = &level.clients[i];
 		vel = client->ps.velocity;
-		avgSpeed = client->speedMeasures.averageSpeed;
-		counts = client->speedMeasures.measurementCount;
+		avgSpeed = client->stats.averageSpeed;
+		counts = client->stats.measurementCount;
 		playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account too?
 
 		avgSpeed = ( (counts*avgSpeed) + playerSpeed ) / (counts+1);
-                client->speedMeasures.measurementCount++;
-                client->speedMeasures.averageSpeed = avgSpeed;
+                client->stats.measurementCount++;
+                client->stats.averageSpeed = avgSpeed;
         }
 }
 
@@ -1487,7 +1488,7 @@ BeginIntermission
 void BeginIntermission( void ) {
 	int			i;
 	gentity_t	*client;
-	gclientspeed_t speedomat;
+	stats_t speedomat;
 
 	if ( level.intermissiontime ) {
 		return;		// already active
@@ -1512,7 +1513,7 @@ void BeginIntermission( void ) {
 		}
 		MoveClientToIntermission( client );
 
-		speedomat = client->client->speedMeasures;
+		speedomat = client->client->stats;
 		G_LogPrintf( "Client (%i)'s average speed was (%i)u/s, distance covered (%i)u\n", 
 			i , speedomat.averageSpeed , speedomat.averageSpeed * speedomat.measurementCount );
 	}

@@ -1773,8 +1773,8 @@ void ClientBegin( int clientNum ) {
             SendCustomVoteCommands(clientNum);
 
         /* init and start the 1000ms polling of the player's speed */
-        ent->client->speedMeasures.averageSpeed = 0;
-        ent->client->speedMeasures.measurementCount = 1;
+        ent->client->stats.averageSpeed = 0;
+        ent->client->stats.measurementCount = 1;
 
 }
 

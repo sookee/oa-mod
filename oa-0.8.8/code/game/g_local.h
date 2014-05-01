@@ -75,15 +75,8 @@ typedef struct gentity_s gentity_t;
 typedef struct gclient_s gclient_t;
 typedef struct gclientspeed_s gclientspeed_t;
 
-struct gclientspeed_s {
-	int averageSpeed;
-	int measurementCount;
-};
-
-//#include "bg_public.h" // this one usually gets included in g_local.h
 
 #define SPAWNKILL_TIME 500  // in msecs
-
 
 typedef struct
 {
@@ -110,6 +103,10 @@ typedef struct
     int armorPickedUp;
     int holyShitFrags;      // I fragged the carrier right before he scores
     int holyShitFragged;    // I got fragged right before i could score
+	
+	int averageSpeed;
+        int measurementCount;
+
 } stats_t;
 
 struct gentity_s {
@@ -368,9 +365,6 @@ struct gclient_s {
 	clientPersistant_t	pers;
 	clientSession_t		sess;
 	
-	//speed
-	gclientspeed_t		speedMeasures;
-
 	qboolean	readyToExit;		// wishes to leave the intermission
 
 	qboolean	noclip;
