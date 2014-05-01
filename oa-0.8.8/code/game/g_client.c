@@ -294,7 +294,7 @@ void katina_reset(stats_t* stats)
 
 
 
-void katina_write(int clientNum, stats_t* stats)
+void katina_write(int clientNum, client_t* stats)
 {
     int i;
 
@@ -334,8 +334,11 @@ void katina_write(int clientNum, stats_t* stats)
             stats->pushesDone, stats->pushesRecv,
             stats->healthPickedUp, stats->armorPickedUp,
             stats->holyShitFrags, stats->holyShitFragged);
-	G_LogPrintf( "Client (%i)'s average speed was (%i)u/s, distance covered (%i)u\n",
-		clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount );
+
+	G_LogPrintf( "Speed: %i %i %i : Client %i's average speed was %iu/s, distance covered %iu\n",
+		clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount ,
+		clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount 
+	);
     katina_reset(stats);
 }
 
