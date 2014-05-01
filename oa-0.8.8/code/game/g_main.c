@@ -697,10 +697,10 @@ void pollSpeed( gentity_t *ent )
 		client = &level.clients[i];
 		vel = client->ps.velocity;
 		avgSpeed = client->stats.averageSpeed;
-		counts = client->stats.measurementCount;
+		counts = client->stats.measurementCount +1;
 		playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account too?
 
-		avgSpeed = ( (counts*avgSpeed) + playerSpeed ) / (counts+1);
+		avgSpeed = ( (counts*avgSpeed) + playerSpeed ) / (counts);
                 client->stats.measurementCount++;
                 client->stats.averageSpeed = avgSpeed;
         }
