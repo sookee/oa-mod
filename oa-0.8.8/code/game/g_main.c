@@ -697,7 +697,7 @@ void pollSpeed( gentity_t *ent )
 		vel = client->ps.velocity;
 		avgSpeed = client->speedMeasures.averageSpeed;
 		counts = client->speedMeasures.measurementCount;
-		playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account
+		playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account too?
 
 		avgSpeed = ( (counts*avgSpeed) + playerSpeed ) / (counts+1);
                 client->speedMeasures.measurementCount++;
@@ -1487,6 +1487,7 @@ BeginIntermission
 void BeginIntermission( void ) {
 	int			i;
 	gentity_t	*client;
+	gclientspeed_t speedomat;
 
 	if ( level.intermissiontime ) {
 		return;		// already active
@@ -1508,7 +1509,10 @@ void BeginIntermission( void ) {
 			ClientRespawn(client);
 		}
 		MoveClientToIntermission( client );
-		G_LogPrintf( "Client %i's average speed was %i\n", i , client->client->speedMeasures.averageSpeed );
+
+		speedomat = client->client.speedMeasures;
+		G_LogPrintf( "Client (%i)'s average speed was (%i)u/s, distance covered (%i)u\n", 
+			i , speedomat.averageSpeed , speedomat.averageSpeed * speedomat.measurementCount );
 	}
 #ifdef MISSIONPACK
 	if (g_singlePlayer.integer) {
