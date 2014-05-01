@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "g_local.h"
 #include "challenges.h"
-#include "katina.h"
 
 /*
 ============
@@ -489,7 +488,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
     if(self->client)
     {
         // For katina stats: Check for spawnkills
-        if( attacker && attacker->client && (self->client->katina.spawnTime + KATINA_SPAWNKILL_TIME) > level.time)
+        if( attacker && attacker->client && (self->client->spawnTime + SPAWNKILL_TIME) > level.time)
         {
             self->client->stats.spawnKillsRecv++;
             attacker->client->stats.spawnKillsDone++;

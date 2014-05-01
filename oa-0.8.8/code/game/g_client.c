@@ -281,6 +281,69 @@ gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles ) 
 	return spot;
 }
 
+
+void katina_reset(stats_t* stats)
+{
+    memset( stats, 0, sizeof(*stats) );
+
+    // Reset float-values
+    int i;
+    for(i=0; i<MOD_NUM_DAMAGETYPES; ++i)
+        stats->weightedHits[i] = 0.0f;
+}
+
+
+
+void katina_write(int clientNum, stats_t* stats)
+{
+    int i;
+
+    for(i=0; i<WP_NUM_WEAPONS; ++i)
+    {
+        // Weapon Usage Update
+        // WeaponUsage: <client#> <weapon#> <#shotsFired>
+        if(stats->numShots[i])
+            G_LogPrintf( "WeaponUsage: %i %i %i\n", clientNum, i, stats->numShots[i]);
+    }
+
+    for(i=0; i<MOD_NUM_DAMAGETYPES; ++i)
+    {
+        // MOD (Means of Death) Damage Update
+        // MODDamage: <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv> <weightedHits>
+        if(stats->numHits[i] || stats->numHitsRecv[i] || stats->damageDone[i] || stats->damageRecv[i])
+        {
+            G_LogPrintf( "MODDamage: %i %i %i %i %i %i %f\n",
+                clientNum, i,
+                stats->numHits[i], stats->damageDone[i],
+                stats->numHitsRecv[i], stats->damageRecv[i],
+                stats->weightedHits[i]);
+        }
+    }
+
+    // Player Stats Update
+    // PlayerStats: <client#>
+    //              <fragsFace> <fragsBack> <fraggedInFace> <fraggedInBack>
+    //              <spawnKillsDone> <spanwKillsRecv>
+    //              <pushesDone> <pushesRecv>
+    //              <healthPickedUp> <armorPickedUp>
+    //              <holyShitFrags> <holyShitFragged>
+    if(stats->fragsFace || stats->fragsBack || stats->fraggedInFace || stats->fraggedInBack
+       || stats->spawnKillsDone || stats->spawnKillsRecv
+       || stats->pushesDone || stats->pushesRecv
+       || stats->healthPickedUp || stats->armorPickedUp || stats->holyShitFrags || stats->holyShitFragged)
+    {
+        G_LogPrintf( "PlayerStats: %i %i %i %i %i %i %i %i %i %i %i %i %i\n",
+            clientNum,
+            stats->fragsFace, stats->fragsBack, stats->fraggedInFace, stats->fraggedInBack,
+            stats->spawnKillsDone, stats->spawnKillsRecv,
+            stats->pushesDone, stats->pushesRecv,
+            stats->healthPickedUp, stats->armorPickedUp,
+            stats->holyShitFrags, stats->holyShitFragged);
+    }
+
+    katina_reset(stats);
+}
+
 /*
 ===========
 SelectInitialSpawnPoint
@@ -1930,8 +1993,7 @@ void ClientSpawn(gentity_t *ent) {
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 	client->ps.eFlags = flags;
     
-    // For katina stats: remember time of last spawn
-    client->katina.spawnTime = level.time;
+	client->spawnTime = level.time;
 
 	ent->s.groundEntityNum = ENTITYNUM_NONE;
 	ent->client = &level.clients[index];
