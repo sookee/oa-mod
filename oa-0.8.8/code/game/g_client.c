@@ -1499,9 +1499,11 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	ClientUserinfoChanged( clientNum );
 	
 	// SooKee add IP address to log
-	// G_LogPrintf( "ClientConnect: %i\n", clientNum );
-	G_LogPrintf( "ClientConnect: %i %s\n", clientNum , client->pers.ip);
+	if(firstTime && !isBot)
+		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
+				, clientNum , client->pers.guid, client->pers.ip);
 
+	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 
 	// don't do the "xxx connected" messages if they were caried over from previous level
 	if ( firstTime ) {
