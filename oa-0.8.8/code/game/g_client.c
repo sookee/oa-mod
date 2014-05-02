@@ -327,6 +327,11 @@ void katina_write(int clientNum, stats_t* stats)
     //              <pushesDone> <pushesRecv>
     //              <healthPickedUp> <armorPickedUp>
     //              <holyShitFrags> <holyShitFragged>
+	/* only log if anything happened  */
+	if(stats->fragsFace || stats->fragsBack || stats->fraggedInFace || stats->fraggedInBack
+		|| stats->spawnKillsDone || stats->spawnKillsRecv
+		|| stats->pushesDone || stats->pushesRecv
+		|| stats->healthPickedUp || stats->armorPickedUp || stats->holyShitFrags || stats->holyShitFragged) {
 	G_LogPrintf( "PlayerStats: %i %i %i %i %i %i %i %i %i %i %i %i %i\n",
             clientNum,
             stats->fragsFace, stats->fragsBack, stats->fraggedInFace, stats->fraggedInBack,
@@ -334,11 +339,15 @@ void katina_write(int clientNum, stats_t* stats)
             stats->pushesDone, stats->pushesRecv,
             stats->healthPickedUp, stats->armorPickedUp,
             stats->holyShitFrags, stats->holyShitFragged);
+	}
 
-	G_LogPrintf( "Speed: %i %i %i : Client %i's average speed was %iu/s, distance covered %iu\n",
-		clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount ,
-		clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount 
-	);
+	/* only log if anything happened  */
+	if ( stats->averageSpeed > 0 ) {
+		G_LogPrintf( "Speed: %i %i %i : Client %i's average speed was %iu/s, distance covered %iu\n",
+			clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount ,
+			clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount 
+		);
+	}
     katina_reset(stats);
 }
 
@@ -1550,9 +1559,9 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 
 	// if a player reconnects quickly after a disconnect, the client disconnect may never be called, thus flag can get lost in the ether
 	if (ent->inuse) {
-	G_LogPrintf("Forcing disconnect on active client: %i\n", clientNum);
-	// so lets just fix up anything that should happen on a disconnect
-	ClientDisconnect(clientNum);
+		G_LogPrintf("Forcing disconnect on active client: %i\n", clientNum);
+		// so lets just fix up anything that should happen on a disconnect
+		ClientDisconnect(clientNum);
 	}
 	// they can connect
 	ent->client = level.clients + clientNum;
@@ -1676,9 +1685,9 @@ void ClientBegin( int clientNum ) {
 	//we want to do this to have fresh stats for every team constellation and balancers/unbalancers!
 	for(i=0; i< level.maxclients ; ++i) {
 		ent = g_entities + i;
-        if(ent->inuse && ent->client)
-            katina_write(i, &ent->client->stats); 
-    }
+		if(ent->inuse && ent->client)
+		    katina_write(i, &ent->client->stats); 
+	}
 
     trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 

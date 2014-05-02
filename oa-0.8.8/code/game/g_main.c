@@ -407,7 +407,7 @@ static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[0
 void G_InitGame( int levelTime, int randomSeed, int restart );
 void G_RunFrame( int levelTime );
 void G_ShutdownGame( int restart );
-void CheckExitRules( void );
+qboolean isExitRuleMet( void );
 
 
 /*
@@ -1294,7 +1294,7 @@ void CalculateRanks( void ) {
 	}
 
 	// see if it is time to end the level
-	CheckExitRules();
+	isExitRuleMet();
 
 	// if we are at the intermission, send the new info to everyone
 	if ( level.intermissiontime ) {
@@ -1527,12 +1527,6 @@ void BeginIntermission( void ) {
 	}
 #endif
 
-	// Write katina stats for each connected player to log
-	for(i=0; i< level.maxclients ; ++i) {
-		client = g_entities + i;
-		if(client->inuse && client->client)
-		    katina_write(i, &client->client->stats);
-	}
 
 	// send the current scoring to all clients
 	SendScoreboardMessageToAllClients();
@@ -1711,12 +1705,12 @@ void LogExit( const char *string ) {
 	qboolean won = qtrue;
 #endif
 
-    /* Write katina stats for each connected player to log
+    /* Write katina stats for each connected player to log */
 	for(i=0; i< level.maxclients ; ++i) {
 		clientEnt = g_entities + i;
-        if(clientEnt->inuse && clientEnt->client)
-            katina_write(i, &clientEnt->client->stats); 
-    }*/
+		if(clientEnt->inuse && clientEnt->client)
+		    katina_write(i, &clientEnt->client->stats); 
+	}
     
 	G_LogPrintf( "Exit: %s\n", string );
 
@@ -1897,31 +1891,31 @@ qboolean ScoreIsTied( void ) {
 
 /*
 =================
-CheckExitRules
+isExitRuleMet
 
 There will be a delay between the time the exit is qualified for
 and the time everyone is moved to the intermission spot, so you
 can see the last frag.
 =================
 */
-void CheckExitRules( void ) {
+qboolean isExitRulesMet( void ) {
  	int			i;
 	gclient_t	*cl;
 	// if at the intermission, wait for all non-bots to
 	// signal ready, then go to next level
 	if ( level.intermissiontime ) {
 		CheckIntermissionExit ();
-		return;
+		return qtrue;
 	} else {
             //sago: Find the reason for this to be neccesary.
-            for (i=0 ; i< g_maxclients.integer ; i++) {
-		cl = level.clients + i;
-		if ( cl->pers.connected != CON_CONNECTED ) {
-			continue;
-                }
-                cl->ps.stats[STAT_CLIENTS_READY] = 0;
-            }
-        }
+		for (i=0 ; i< g_maxclients.integer ; i++) {
+			cl = level.clients + i;
+			if ( cl->pers.connected != CON_CONNECTED ) {
+				continue;
+                	}
+	                cl->ps.stats[STAT_CLIENTS_READY] = 0;
+            	}
+	}
 
 	if ( level.intermissionQueued ) {
 #ifdef MISSIONPACK
@@ -1936,38 +1930,38 @@ void CheckExitRules( void ) {
 			BeginIntermission();
 		}
 #endif
-		return;
+		return qtrue;
 	}
 
 	// check for sudden death
 	if ( ScoreIsTied() ) {
 		// always wait for sudden death
-		return;
+		return qfalse;
 	}
 
 	if ( g_timelimit.integer > 0 && !level.warmupTime ) {
 		if ( (level.time - level.startTime)/60000 >= g_timelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Timelimit hit.\n\"");
 			LogExit( "Timelimit hit." );
-			return;
+			return qtrue;
 		}
 	}
 
 	if ( level.numPlayingClients < 2 ) {
-		return;
+		return qfalse;
 	}
 
 	if ( (g_gametype.integer < GT_CTF || g_ffa_gt>0 ) && g_fraglimit.integer ) {
 		if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
 			LogExit( "Fraglimit hit." );
-			return;
+			return qtrue;
 		}
 
 		if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
 			LogExit( "Fraglimit hit." );
-			return;
+			return qtrue;
 		}
 
 		for ( i=0 ; i< g_maxclients.integer ; i++ ) {
@@ -1983,7 +1977,7 @@ void CheckExitRules( void ) {
 				LogExit( "Fraglimit hit." );
 				trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
 					cl->pers.netname ) );
-				return;
+				return qtrue;
 			}
 		}
 	}
@@ -1993,15 +1987,16 @@ void CheckExitRules( void ) {
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 			LogExit( "Capturelimit hit." );
-			return;
+			return qtrue;
 		}
 
 		if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
 			LogExit( "Capturelimit hit." );
-			return;
+			return qtrue;
 		}
 	}
+	return qfalse;
 }
 
 //LMS - Last man Stading functions:
@@ -2933,7 +2928,7 @@ end = trap_Milliseconds();
 		Team_Dom_SpawnPoints();
 
 	// see if it is time to end the level
-	CheckExitRules();
+	isExitRuleMet();
 
 	// update to team status?
 	CheckTeamStatus();
