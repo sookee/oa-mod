@@ -1898,7 +1898,7 @@ and the time everyone is moved to the intermission spot, so you
 can see the last frag.
 =================
 */
-qboolean isExitRulesMet( void ) {
+qboolean isExitRuleMet( void ) {
  	int			i;
 	gclient_t	*cl;
 	// if at the intermission, wait for all non-bots to
