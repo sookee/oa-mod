@@ -1543,7 +1543,12 @@ void Cmd_GameCommand_f( gentity_t *ent ) {
 	G_Say( ent, ent, SAY_TELL, gc_orders[order] );
 }
 
-void Cmd_SetSpectSpeed_f( gentity_t *ent ) {
+void Cmd_GetMySpeed_f( gentity_t *ent ) 
+{
+	trap_SendServerCommand( ent-g_entities, va("print \"%s\n\"", ent->client->stats.averageSpeed ) );
+}
+void Cmd_SetSpectSpeed_f( gentity_t *ent ) 
+{
 	int		speed;
 	char	str[MAX_TOKEN_CHARS];
 
@@ -2253,7 +2258,8 @@ commands_t cmds[ ] =
   { "getmappage", 0, Cmd_GetMappage_f },
   { "gc", 0, Cmd_GameCommand_f },
 
-	{ "spectatorSpeed", 0 , Cmd_SetSpectSpeed_f }
+	{ "spectatorSpeed", 0 , Cmd_SetSpectSpeed_f },
+	{ "myspeed", 0 , Cmd_GetMySpeed_f }
   
 };
 
