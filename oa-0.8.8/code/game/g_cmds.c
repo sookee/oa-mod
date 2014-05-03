@@ -1545,7 +1545,8 @@ void Cmd_GameCommand_f( gentity_t *ent ) {
 
 void Cmd_GetMySpeed_f( gentity_t *ent ) 
 {
-	trap_SendServerCommand( ent-g_entities, va("print \"%s\n\"", ent->client->stats.averageSpeed ) );
+	if ( ent->client )
+		trap_SendServerCommand( ent-g_entities, va("print \"%i\n\"", ent->client->stats.averageSpeed) );
 }
 void Cmd_SetSpectSpeed_f( gentity_t *ent ) 
 {
