@@ -685,7 +685,8 @@ int G_UpdateTimestamp( void ) {
 void pollSpeed( gentity_t *ent )
 {
         gclient_t* client;
-        int i, avgSpeed, counts, playerSpeed;
+        int i, counts, playerSpeed;
+	unsigned int avgSpeed;
         vec_t *vel;
 
         //poll again in 1000ms

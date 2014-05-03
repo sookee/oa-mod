@@ -73,7 +73,6 @@ typedef enum {
 
 typedef struct gentity_s gentity_t;
 typedef struct gclient_s gclient_t;
-typedef struct gclientspeed_s gclientspeed_t;
 
 
 #define SPAWNKILL_TIME 500  // in msecs
@@ -104,7 +103,7 @@ typedef struct
     int holyShitFrags;      // I fragged the carrier right before he scores
     int holyShitFragged;    // I got fragged right before i could score
 	
-	int averageSpeed;
+	unsigned int averageSpeed;
         int measurementCount;
 
 } stats_t;
