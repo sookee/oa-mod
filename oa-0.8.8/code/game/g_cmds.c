@@ -1617,7 +1617,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		trap_SendServerCommand( ent-g_entities, "print \"You have called the maximum number of votes.\n\"" );
 		return;
 	}
-	if ( (ent->client->sess.sessionTeam == TEAM_SPECTATOR)  && (g_allowSpectatorVote==0) ) {
+	if ( (ent->client->sess.sessionTeam == TEAM_SPECTATOR)  && (g_allowSpectatorVote.integer==0) ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Not allowed to call a vote as spectator.\n\"" );
 		return;
 	}
