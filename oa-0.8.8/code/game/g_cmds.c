@@ -1902,9 +1902,11 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	level.voteNo = 0;
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		//set 'has voted' flag to 0
 		level.clients[i].ps.eFlags &= ~EF_VOTED;
                 level.clients[i].vote = 0;
 	}
+	//caller has voted
 	ent->client->ps.eFlags |= EF_VOTED;
         ent->client->vote = 1;
         //Do a first count to make sure that numvotingclients is correct!
@@ -1932,7 +1934,7 @@ void Cmd_Vote_f( gentity_t *ent ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Vote already cast.\n\"" );
 		return;
 	}*/
-	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
+	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR && ( g_allowSpectatorVote.integer == 0 )) {
 		trap_SendServerCommand( ent-g_entities, "print \"Not allowed to vote as spectator.\n\"" );
 		return;
 	}

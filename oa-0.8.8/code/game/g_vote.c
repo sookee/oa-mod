@@ -437,7 +437,7 @@ void CountVotes( void ) {
             if ( level.clients[ i ].pers.connected != CON_CONNECTED )
                 continue; //Client was not connected
 
-            if (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR)
+            if ( (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR) && (g_allowSpectatorVote.integer==0) )
 		continue; //Don't count spectators
 
             if ( g_entities[i].r.svFlags & SVF_BOT )
