@@ -433,12 +433,20 @@ void CountVotes( void ) {
 
     level.numVotingClients=0;
 
-    for ( i = 0 ; i < level.maxclients ; i++ ) {
-            if ( level.clients[ i ].pers.connected != CON_CONNECTED )
-                continue; //Client was not connected
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		if ( level.clients[ i ].pers.connected != CON_CONNECTED )
+			continue; //Client was not connected
 
-            if ( (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR) && (g_allowSpectatorVote.integer==0) )
-		continue; //Don't count spectators
+		if ( (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR) ) {
+			if (g_allowSpectatorVote.integer==0) {
+				continue; //Don't count spectators
+			} else {
+				//spect has not voted
+				if ( !(level.clients[ i ].ps.eFlags &= EF_VOTED) ) {
+					continue;
+				}
+			}
+		}
 
             if ( g_entities[i].r.svFlags & SVF_BOT )
                 continue; //Is a bot

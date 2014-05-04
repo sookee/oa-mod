@@ -1934,9 +1934,11 @@ void Cmd_Vote_f( gentity_t *ent ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Vote already cast.\n\"" );
 		return;
 	}*/
-	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR && ( g_allowSpectatorVote.integer == 0 )) {
-		trap_SendServerCommand( ent-g_entities, "print \"Not allowed to vote as spectator.\n\"" );
-		return;
+	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
+		if ( g_allowSpectatorVote.integer == 0 ) {
+			trap_SendServerCommand( ent-g_entities, "print \"Not allowed to vote as spectator.\n\"" );
+			return;
+		} 
 	}
 
 	trap_SendServerCommand( ent-g_entities, "print \"Vote cast.\n\"" );
