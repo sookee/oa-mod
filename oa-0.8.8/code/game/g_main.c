@@ -81,6 +81,7 @@ vmCvar_t	g_blood;
 vmCvar_t	g_podiumDist;
 vmCvar_t	g_podiumDrop;
 vmCvar_t	g_allowVote;
+vmCvar_t	g_allowSpectatorVote;
 vmCvar_t	g_teamAutoJoin;
 vmCvar_t	g_teamForceBalance;
 vmCvar_t	g_banIPs;
@@ -267,6 +268,7 @@ static cvarTable_t		gameCvarTable[] = {
 
         //Votes start:
 	{ &g_allowVote, "g_allowVote", "1", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+	{ &g_allowSpectatorVote, "g_allowSpectatorVote", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_maxvotes, "g_maxVotes", MAX_VOTE_COUNT, CVAR_ARCHIVE, 0, qfalse },
         { &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/shuffle/", CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
         { &g_voteBan, "g_voteBan", "0", CVAR_ARCHIVE, 0, qfalse },
