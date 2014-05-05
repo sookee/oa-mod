@@ -368,7 +368,7 @@ void CheckVote( void ) {
 		trap_SendConsoleCommand( EXEC_APPEND, va("%s\n", level.voteString ) );
 	}
 	//no vote or if specs can vote minimum vote time not expired
-	if ( (!level.voteTime) || ((g_allowSpectatorVote.integer==1) && (level.time - level.voteTime >= VOTE_WITH_SPECT_TIME)) ) {
+	if ( (!level.voteTime) || ((g_allowSpectatorVote.integer==1) && (level.time - level.voteTime < VOTE_WITH_SPECT_TIME)) ) {
 		return;
 	}
 	if ( level.time - level.voteTime >= VOTE_TIME ) {
