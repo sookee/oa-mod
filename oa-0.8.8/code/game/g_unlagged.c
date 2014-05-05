@@ -54,9 +54,9 @@ Keep track of where the client's been
 ============
 */
 void G_StoreHistory( gentity_t *ent ) {
-	int		head, frametime;
+	int		head;
 
-	frametime = level.time - level.previousTime;
+	//int frametime = level.time - level.previousTime;
 
 	ent->client->historyHead++;
 	if ( ent->client->historyHead >= NUM_CLIENT_HISTORY ) {
