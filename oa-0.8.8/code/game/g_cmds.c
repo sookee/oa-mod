@@ -834,8 +834,9 @@ void SetTeam( gentity_t *ent, char *s ) {
                 if(teamscore != -99) {
 			level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
 		}
-		PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),client->ps);
-
+		if ( client ) {
+			PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),client->ps);
+		}
 	}
 
 	// they go to the end of the line for tournements
