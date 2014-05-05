@@ -1603,6 +1603,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	char	arg1[MAX_STRING_TOKENS];
 	char	arg2[MAX_STRING_TOKENS];
         char    buffer[256];
+	int doesRestart=0;
 
 	if ( !g_allowVote.integer ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Voting not allowed here.\n\"" );
@@ -1640,16 +1641,22 @@ void Cmd_CallVote_f( gentity_t *ent ) {
         
 
 	if ( !Q_stricmp( arg1, "map_restart" ) ) {
+		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "nextmap" ) ) {
+		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "map" ) ) {
+		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "g_gametype" ) ) {
+		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "kick" ) ) {
 	} else if ( !Q_stricmp( arg1, "clientkick" ) ) {
 	} else if ( !Q_stricmp( arg1, "g_doWarmup" ) ) {
 	} else if ( !Q_stricmp( arg1, "timelimit" ) ) {
 	} else if ( !Q_stricmp( arg1, "fraglimit" ) ) {
         } else if ( !Q_stricmp( arg1, "custom" ) ) {
+		//doesRestart=?;
         } else if ( !Q_stricmp( arg1, "shuffle" ) ) {
+		doesRestart=1;
 	} else {
 		trap_SendServerCommand( ent-g_entities, "print \"Invalid vote string.\n\"" );
 		//trap_SendServerCommand( ent-g_entities, "print \"Vote commands are: map_restart, nextmap, map <mapname>, g_gametype <n>, kick <player>, clientkick <clientnum>, g_doWarmup, timelimit <time>, fraglimit <frags>.\n\"" );
@@ -1894,6 +1901,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	}
 
         ent->client->pers.voteCount++;
+	level.isVoteWithRestart = doesRestart;
 	trap_SendServerCommand( -1, va("print \"%s called a vote.\n\"", ent->client->pers.netname ) );
 
 	// start the voting, the caller autoamtically votes yes
@@ -2277,11 +2285,32 @@ KK-OAX, Takes the client command and runs it through a loop which matches
 it against the table. 
 =================
 */
+
+/* SooKee mute commands */
+
+const char* muted[] =
+{
+	"say"
+	, "say_team"
+	, "tell"
+	, "vchat"
+	, "vtchat"
+	, "vsay"
+	, "vsay_team"
+	, "vsay_local"
+	, "vtell"
+	, "vosay"
+	, "vosay_team"
+	, "vosay_local"
+	, "votell"
+};
+
 void ClientCommand( int clientNum )
 {
     gentity_t *ent;
     char      cmd[ MAX_TOKEN_CHARS ];
     int       i;
+    int       m; // SooKee mute fix
 
     ent = g_entities + clientNum;
     if( !ent->client )
@@ -2301,6 +2330,20 @@ void ClientCommand( int clientNum )
             trap_SendServerCommand( clientNum,
                 va( "print \"Unknown command %s\n\"", cmd ) );
             return;
+    }
+
+    // SooKee check mute
+    if(ent->client->pers.muted)
+    {
+    	for(m = 0; m < sizeof(muted)/sizeof(muted[0]); ++m)
+    	{
+			if(Q_stricmp(cmd, muted[m]) == 0)
+			{
+			   trap_SendServerCommand( clientNum,
+					"print \"You have been ^3MUTED ^7by admin\n\"" );
+			   return;
+			}
+    	}
     }
 
   // do tests here to reduce the amount of repeated code

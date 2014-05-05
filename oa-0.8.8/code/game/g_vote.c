@@ -357,6 +357,11 @@ t_customvote getCustomVote(char* votecommand) {
         return result;
 }
 
+void cpMapChanges( const char* const voteString )
+{
+
+}
+
 /*
 ==================
 CheckVote
@@ -367,35 +372,50 @@ void CheckVote( void ) {
 		level.voteExecuteTime = 0;
 		trap_SendConsoleCommand( EXEC_APPEND, va("%s\n", level.voteString ) );
 	}
-	if ( !level.voteTime ) {
+	//no vote or if specs can vote minimum vote time not expired
+	if ( (!level.voteTime) || ((g_allowSpectatorVote.integer==1) && (level.time - level.voteTime >= VOTE_WITH_SPECT_TIME)) ) {
 		return;
 	}
 	if ( level.time - level.voteTime >= VOTE_TIME ) {
-            if(g_dmflags.integer & DF_LIGHT_VOTING) {
-                //Let pass if there was at least twice as many for as against
-                if ( level.voteYes > level.voteNo*2 ) {
-                    trap_SendServerCommand( -1, "print \"Vote passed. At least 2 of 3 voted yes\n\"" );
-                    level.voteExecuteTime = level.time + 3000;
-                } else {
-                    //Let pass if there is more yes than no and at least 2 yes votes and at least 30% yes of all on the server
-                    if ( level.voteYes > level.voteNo && level.voteYes >= 2 && (level.voteYes*10)>(level.numVotingClients*3) ) {
-                        trap_SendServerCommand( -1, "print \"Vote passed. More yes than no.\n\"" );
-                        level.voteExecuteTime = level.time + 3000;
-                    } else
-                        trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
-                }
-            } else {
-                trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
-            }
+		if(g_dmflags.integer & DF_LIGHT_VOTING) {
+			//Let pass if there was at least twice as many for as against
+			if ( level.voteYes > level.voteNo*2 ) {
+				trap_SendServerCommand( -1, "print \"Vote ^2passed^7. At least 2 of 3 voted yes\n\"" );
+				if ( level.isVoteWithRestart )
+				{
+					trap_SendServerCommand( -1, "cp \"Vote ^2passed^7. At least 2 of 3 voted yes\n\"" );
+				}
+
+				level.voteExecuteTime = level.time + 3000;
+			} else {
+				//Let pass if there is more yes than no and at least 2 yes votes and at least 30% yes of all on the server
+				if ( level.voteYes > level.voteNo && level.voteYes >= 2 && (level.voteYes*10)>(level.numVotingClients*3) ) {
+					trap_SendServerCommand( -1, "print \"Vote ^2passed^7. More yes than no.\n\"" );
+					if ( level.isVoteWithRestart )
+					{
+						trap_SendServerCommand( -1, "cp \"Vote ^2passed^7. More yes than no.\n\"" );
+					}
+					level.voteExecuteTime = level.time + 2000;
+				} else {
+					trap_SendServerCommand( -1, "print \"Vote ^1failed^7.\n\"" );
+				}
+			}
+		} else {
+			trap_SendServerCommand( -1, "print \"Vote ^1failed^7.\n\"" );
+		}
 	} else {
 		// ATVI Q3 1.32 Patch #9, WNF
 		if ( level.voteYes > (level.numVotingClients)/2 ) {
 			// execute the command, then remove the vote
-			trap_SendServerCommand( -1, "print \"Vote passed.\n\"" );
-			level.voteExecuteTime = level.time + 3000;
+			trap_SendServerCommand( -1, "print \"Vote ^2passed^7.\n\"" );
+			if ( level.isVoteWithRestart )
+			{
+				trap_SendServerCommand( -1, "cp \"Vote ^2passed^7.\n\"" );
+			}
+			level.voteExecuteTime = level.time + 2000;
 		} else if ( level.voteNo >= (level.numVotingClients)/2 ) {
 			// same behavior as a timeout
-			trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
+			trap_SendServerCommand( -1, "print \"Vote ^1failed^7.\n\"" );
 		} else {
 			// still waiting for a majority
 			return;
@@ -403,7 +423,6 @@ void CheckVote( void ) {
 	}
 	level.voteTime = 0;
 	trap_SetConfigstring( CS_VOTE_TIME, "" );
-
 }
 
 void ForceFail( void ) {
@@ -438,9 +457,11 @@ void CountVotes( void ) {
 			continue; //Client was not connected
 
 		if ( (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR) ) {
+			//count spectators or not?
 			if (g_allowSpectatorVote.integer==0) {
 				continue; //Don't count spectators
 			} else {
+				//count spectators if they have voted
 				//spect has not voted
 				if ( !(level.clients[ i ].ps.eFlags &= EF_VOTED) ) {
 					continue;

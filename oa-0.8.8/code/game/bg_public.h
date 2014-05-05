@@ -49,6 +49,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define	SCORE_NOT_PRESENT	-9999	// for the CS_SCORES[12] when only one player is present
 
 #define	VOTE_TIME			30000	// 30 seconds before vote times out
+#define	VOTE_WITH_SPECT_TIME		5000	// 5 seconds min for specs to vote
 
 #define	MINS_Z				-24
 #define	DEFAULT_VIEWHEIGHT	26

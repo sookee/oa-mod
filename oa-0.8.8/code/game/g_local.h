@@ -509,6 +509,7 @@ typedef struct {
 	// voting state
 	char		voteString[MAX_STRING_CHARS];
 	char		voteDisplayString[MAX_STRING_CHARS];
+	int			isVoteWithRestart;		//does the vote need a map/client restart?
 	int			voteTime;				// level.time vote was called
 	int			voteExecuteTime;		// time the vote is executed
 	int			voteYes;
@@ -1188,6 +1189,7 @@ extern  vmCvar_t    g_warningExpire;
 extern  vmCvar_t    g_minNameChangePeriod;
 extern  vmCvar_t    g_maxNameChanges;
 
+extern  vmCvar_t    mod_sookee; // version of sookee's mod
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));
