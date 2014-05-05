@@ -583,6 +583,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 			G_Damage (ent, NULL, NULL, NULL, NULL, damage, 0, MOD_FALLING);
 			break;
 
+		//	Crouching Tiger mod here?
 		case EV_FIRE_WEAPON:
 			FireWeapon( ent );
 			break;

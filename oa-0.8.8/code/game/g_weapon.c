@@ -909,6 +909,10 @@ void FireWeapon( gentity_t *ent ) {
 		return;
 	}
 
+//	Crouching Tiger mod
+//	if(!(ent->client->ps.pm_flags & PMF_DUCKED))
+//		return;
+
 	if (ent->client->ps.powerups[PW_QUAD] ) {
 		s_quadFactor = g_quadfactor.value;
 	} else {
