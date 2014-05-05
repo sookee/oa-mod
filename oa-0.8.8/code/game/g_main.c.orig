@@ -1496,7 +1496,6 @@ BeginIntermission
 void BeginIntermission( void ) {
 	int			i;
 	gentity_t	*client;
-	stats_t speedomat;
 
 	if ( level.intermissiontime ) {
 		return;		// already active

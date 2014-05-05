@@ -1564,10 +1564,10 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		ClientDisconnect(clientNum);
 	}
 	// they can connect
-	ent->client = level.clients + clientNum;
-	client = ent->client;
+	//ent->client = level.clients + clientNum;
+	//client = ent->client;
 
-	memset(client, 0, sizeof(*client));
+	//memset(client, 0, sizeof(*client));
 
 
     //Check for local client
