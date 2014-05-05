@@ -386,7 +386,7 @@ void CheckVote( void ) {
 					trap_SendServerCommand( -1, "cp \"Vote ^2passed^7. At least 2 of 3 voted yes\n\"" );
 				}
 
-				level.voteExecuteTime = level.time + 3000;
+				level.voteExecuteTime = level.time + 2000;
 			} else {
 				//Let pass if there is more yes than no and at least 2 yes votes and at least 30% yes of all on the server
 				if ( level.voteYes > level.voteNo && level.voteYes >= 2 && (level.voteYes*10)>(level.numVotingClients*3) ) {
