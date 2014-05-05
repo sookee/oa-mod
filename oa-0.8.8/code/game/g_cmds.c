@@ -2227,31 +2227,11 @@ it against the table.
 =================
 */
 
-/* SooKee mute commands */
-
-const char* muted[] =
-{
-	"say"
-	, "say_team"
-	, "tell"
-	, "vchat"
-	, "vtchat"
-	, "vsay"
-	, "vsay_team"
-	, "vsay_local"
-	, "vtell"
-	, "vosay"
-	, "vosay_team"
-	, "vosay_local"
-	, "votell"
-};
-
 void ClientCommand( int clientNum )
 {
     gentity_t *ent;
     char      cmd[ MAX_TOKEN_CHARS ];
     int       i;
-    int       m; // SooKee mute fix
 
     ent = g_entities + clientNum;
     if( !ent->client )
@@ -2273,20 +2253,6 @@ void ClientCommand( int clientNum )
             return;
     }
 
-    // SooKee check mute
-    if(ent->client->pers.muted)
-    {
-    	for(m = 0; m < sizeof(muted)/sizeof(muted[0]); ++m)
-    	{
-			if(Q_stricmp(cmd, muted[m]) == 0)
-			{
-			   trap_SendServerCommand( clientNum,
-					"print \"You have been ^3MUTED ^7by admin\n\"" );
-			   return;
-			}
-    	}
-    }
-
   // do tests here to reduce the amount of repeated code
     if( !( cmds[ i ].cmdFlags & CMD_INTERMISSION ) && level.intermissiontime )
         return;
@@ -2302,6 +2268,14 @@ void ClientCommand( int clientNum )
     //    ( ent->client->pers.muted || G_FloodLimited( ent ) ) )
     //    return;
     
+    // SooKee check mute
+    if(ent->client->pers.muted && (cmds[i].cmdFlags & CMD_MESSAGE))
+    {
+	   trap_SendServerCommand( clientNum,
+			"print \"You have been ^3MUTED ^7by admin\n\"" );
+	   return;
+    }
+
     //KK-OAX Do I need to change this for FFA gametype?
     if( cmds[ i ].cmdFlags & CMD_TEAM &&
         ent->client->sess.sessionTeam == TEAM_SPECTATOR )
