@@ -1639,7 +1639,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		}
         }
         
-
 	if ( !Q_stricmp( arg1, "map_restart" ) ) {
 		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "nextmap" ) ) {
@@ -1860,13 +1859,13 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Shuffle teams?" );
         } else if ( !Q_stricmp( arg1, "kick" ) ) {
                 i = 0;
-                while(Q_stricmp(arg2,(g_entities+i)->client->pers.netname)) {
-                    //Not client i, try next
-                    i++;
-                    if(i>=MAX_CLIENTS){ //Only numbers <128 is clients
-                        trap_SendServerCommand( ent-g_entities, "print \"Cannot find the playername. Try clientkick instead.\n\"" );
-                        return;
-                    }
+		while(Q_stricmp(arg2,(level.clients+i)->pers.netname)) {
+			//Not client i, try next
+			i++;
+			if(i>=MAX_CLIENTS){ //Only numbers <128 is clients
+				trap_SendServerCommand( ent-g_entities, "print \"Cannot find the playername. Try clientkick instead.\n\"" );
+				return;
+			}
                 }
                 level.voteKickClient = i;
                 if(g_voteBan.integer<1) {

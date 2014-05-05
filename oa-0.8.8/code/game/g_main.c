@@ -798,7 +798,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	level.clients = g_clients;
 
 	// set client fields on player ents
-	for ( i=0 ; i<level.maxclients ; i++ ) {
+	for ( i=0 ; i<MAX_CLIENTS ; i++ ) {
 		g_entities[i].client = level.clients + i;
 	}
 
@@ -909,7 +909,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	/* init and start the 1000ms polling of the player's speed */
 	pollevent = G_Spawn();
 	pollevent->think = pollSpeed; 
-	pollevent->nextthink = level.time + 1000;  
+	pollevent->nextthink = level.time + 1000; 
 
 }
 
@@ -1496,7 +1496,6 @@ BeginIntermission
 void BeginIntermission( void ) {
 	int			i;
 	gentity_t	*client;
-	stats_t speedomat;
 
 	if ( level.intermissiontime ) {
 		return;		// already active
@@ -2781,7 +2780,6 @@ void G_RunFrame( int levelTime ) {
 	int			i;
 	gentity_t	*ent;
 	int			msec;
-int start, end;
 
 	// if we are waiting for the level to restart, do nothing
 	if ( level.restarted ) {
@@ -2815,7 +2813,6 @@ int start, end;
 	//
 	// go through all allocated objects
 	//
-	start = trap_Milliseconds();
 	ent = &g_entities[0];
 	for (i=0 ; i<level.num_entities ; i++, ent++) {
 		if ( !ent->inuse ) {
@@ -2906,9 +2903,7 @@ int start, end;
 	G_UnTimeShiftAllClients( NULL );
 //unlagged - backward reconciliation #2
 
-end = trap_Milliseconds();
 
-start = trap_Milliseconds();
 	// perform final fixups on the players
 	ent = &g_entities[0];
 	for (i=0 ; i < level.maxclients ; i++, ent++ ) {
@@ -2916,7 +2911,6 @@ start = trap_Milliseconds();
 			ClientEndFrame( ent );
 		}
 	}
-end = trap_Milliseconds();
 
 	// see if it is time to do a tournement restart
 	CheckTournament();
