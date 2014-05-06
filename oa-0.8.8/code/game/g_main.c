@@ -691,8 +691,7 @@ int G_UpdateTimestamp( void ) {
 void pollSpeed( gentity_t *ent )
 {
         gclient_t* client;
-        int i, counts, playerSpeed;
-	unsigned int avgSpeed;
+        int i, playerSpeed;
         vec_t *vel;
 
         //poll again in 1000ms
@@ -703,13 +702,18 @@ void pollSpeed( gentity_t *ent )
         for ( i=0 ; i<level.maxclients ; i++ ) {
                 client = &level.clients[i];
                 vel = client->ps.velocity;
-                avgSpeed = client->stats.averageSpeed;
-                counts = client->stats.measurementCount;
                 playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account too?
 
-                avgSpeed = ( (counts*avgSpeed) + playerSpeed ) / (counts+1);
-                client->stats.measurementCount++;
-                client->stats.averageSpeed = avgSpeed;
+		if ( client->ps.powerups[PW_REDFLAG] ||
+                	client->ps.powerups[PW_BLUEFLAG] ||
+                	client->ps.powerups[PW_NEUTRALFLAG] ) 
+		{
+	        	        client->stats.distanceCountFlag++;
+        	        	client->stats.distanceRanWithFlag += playerSpeed;
+		} else {
+	        	        client->stats.distanceCount++;
+        	        	client->stats.distanceRan += playerSpeed;
+		}
                 //trap_SendServerCommand( i , va( "print \"avgspeed %i\n\"", avgSpeed ) );
         }
 }

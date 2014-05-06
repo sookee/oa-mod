@@ -342,10 +342,23 @@ void katina_write(int clientNum, stats_t* stats)
 	}
 
 	/* only log if anything happened  */
-	if ( stats->averageSpeed > 0 ) {
-		G_LogPrintf( "Speed: %i %i %i : Client %i's average speed was %iu/s, distance covered %iu\n",
-			clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount ,
-			clientNum , stats->averageSpeed , stats->averageSpeed * stats->measurementCount 
+	if ( stats->distanceRan > 0 ) {
+		if ( ( g_gametype.integer == GT_CTF ) || ( g_gametype.integer == GT_CTF_ELIMINATION ) ) {
+			G_LogPrintf( "Speed: %i %i %i : Client %i ran %iu in %is without the flag.\n",
+				clientNum , stats->distanceRan , stats->distanceCount,
+				clientNum , stats->distanceRan , stats->distanceCount 
+			);
+		} else {
+			G_LogPrintf( "Speed: %i %i %i : Client %i ran %iu in %is.\n",
+				clientNum , stats->distanceRan , stats->distanceCount,
+				clientNum , stats->distanceRan , stats->distanceCount 
+			);
+		}
+	}
+	if ( stats->distanceRanWithFlag > 0 ) {
+		G_LogPrintf( "SpeedFlag: %i %i %i : Client %i ran %iu in %is while holding the flag.\n",
+			clientNum , stats->distanceRanWithFlag , stats->distanceCountFlag,
+			clientNum , stats->distanceRanWithFlag , stats->distanceCountFlag 
 		);
 	}
     katina_reset(stats);

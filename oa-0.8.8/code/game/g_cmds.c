@@ -1546,9 +1546,16 @@ void Cmd_GameCommand_f( gentity_t *ent ) {
 
 void Cmd_GetMySpeed_f( gentity_t *ent ) 
 {
-	if ( ent->client )
-		trap_SendServerCommand( ent-g_entities, va("print \"%i\n\"", ent->client->stats.averageSpeed) );
+	if ( ent->client ) {
+		if ( ( g_gametype.integer == GT_CTF ) || ( g_gametype.integer == GT_CTF_ELIMINATION ) ) {
+			trap_SendServerCommand( ent-g_entities, va("print \"You ran %iu in %is without and %is in %is with the flag.\n\"", 
+				ent->client->stats.distanceRan, ent->client->stats.distanceCount , ent->client->stats.distanceRanWithFlag, ent->client->stats.distanceCountFlag) );
+		} else {
+			trap_SendServerCommand( ent-g_entities, va("print \"You ran %iu in %is.\n\"", ent->client->stats.distanceRan , ent->client->stats.distanceCount) );
+		}
+	}
 }
+
 void Cmd_SetSpectSpeed_f( gentity_t *ent ) 
 {
 	int		speed;
