@@ -221,7 +221,7 @@ static cvarTable_t		gameCvarTable[] = {
 	// change anytime vars
 	{ &g_dmflags, "dmflags", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
         { &g_videoflags, "videoflags", "7", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
-        { &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
+        { &g_elimflags, "elimflags", "0",  0 , 0, qfalse  },
         { &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
 	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
@@ -248,7 +248,7 @@ static cvarTable_t		gameCvarTable[] = {
 
 	{ &g_dedicated, "dedicated", "0", 0, 0, qfalse  },
 
-	{ &g_speed, "g_speed", "320", 0, 0, qtrue  },
+	{ &g_speed, "g_speed", "320", 0, CVAR_SERVERINFO , qtrue  },
 	{ &g_gravity, "g_gravity", "800", 0, 0, qtrue  },
 	{ &g_gravityModifier, "g_gravityModifier", "1", 0, 0, qtrue  },
         { &g_damageModifier, "g_damageModifier", "0", 0, 0, qtrue },
@@ -275,11 +275,11 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_maxvotes, "g_maxVotes", MAX_VOTE_COUNT, CVAR_ARCHIVE, 0, qfalse },
         { &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/shuffle/", CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
         { &g_voteBan, "g_voteBan", "0", CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/5/6/7/8/9/10/11/12/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteMaxTimelimit, "g_voteMaxTimelimit", "1000", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteMaxFraglimit, "g_voteMaxFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteMinFraglimit, "g_voteMinFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+        { &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/5/6/7/8/9/10/11/12/", CVAR_ARCHIVE, 0, qfalse },
+        { &g_voteMaxTimelimit, "g_voteMaxTimelimit", "1000", CVAR_ARCHIVE, 0, qfalse },
+        { &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_ARCHIVE, 0, qfalse },
+        { &g_voteMaxFraglimit, "g_voteMaxFraglimit", "0", CVAR_ARCHIVE, 0, qfalse },
+        { &g_voteMinFraglimit, "g_voteMinFraglimit", "0", CVAR_ARCHIVE, 0, qfalse },
         { &g_votemaps, "g_votemapsfile", "votemaps.cfg", 0, 0, qfalse },
         { &g_votecustom, "g_votecustomfile", "votecustom.cfg", 0, 0, qfalse },
 
@@ -288,7 +288,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_obeliskHealth, "g_obeliskHealth", "2500", 0, 0, qfalse },
 	{ &g_obeliskRegenPeriod, "g_obeliskRegenPeriod", "1", 0, 0, qfalse },
 	{ &g_obeliskRegenAmount, "g_obeliskRegenAmount", "15", 0, 0, qfalse },
-	{ &g_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SERVERINFO, 0, qfalse },
+	{ &g_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", 0 , 0, qfalse },
 
 	{ &g_cubeTimeout, "g_cubeTimeout", "30", 0, 0, qfalse },
         #ifdef MISSIONPACK
@@ -297,8 +297,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_singlePlayer, "ui_singlePlayerActive", "", 0, 0, qfalse, qfalse  },
         #endif
 
-	{ &g_enableDust, "g_enableDust", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
-	{ &g_enableBreath, "g_enableBreath", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
+	{ &g_enableDust, "g_enableDust", "0", 0 , 0, qtrue, qfalse },
+	{ &g_enableBreath, "g_enableBreath", "0", 0 , 0, qtrue, qfalse },
 	{ &g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, qfalse },
 
 	{ &g_smoothClients, "g_smoothClients", "1", 0, 0, qfalse},
@@ -312,7 +312,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_truePing, "g_truePing", "0", CVAR_ARCHIVE, 0, qtrue },
 	// it's CVAR_SYSTEMINFO so the client's sv_fps will be automagically set to its value
 	{ &sv_fps, "sv_fps", "20", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_lagLightning, "g_lagLightning", "1", CVAR_ARCHIVE, 0, qtrue },
+        { &g_lagLightning, "g_lagLightning", "1", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qtrue },
 //unlagged - server options
 
 	{ &g_rankings, "g_rankings", "0", 0, 0, qfalse},
@@ -377,7 +377,7 @@ static cvarTable_t		gameCvarTable[] = {
 
         //KK-OAX
         { &g_sprees, "g_sprees", "sprees.dat", 0, 0, qfalse },
-        { &g_altExcellent, "g_altExcellent", "0", CVAR_SERVERINFO, 0, qtrue},
+        { &g_altExcellent, "g_altExcellent", "0", 0 , 0, qtrue},
         { &g_spreeDiv, "g_spreeDiv", "5", 0, 0, qfalse},
 
         //Used for command/chat flooding
