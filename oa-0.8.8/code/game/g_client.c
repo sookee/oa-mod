@@ -1549,9 +1549,9 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		    if( !Q_stricmp( client->pers.guid, level.clients[ i ].pers.guid ) ) {
 		        if( !G_ClientIsLagging( level.clients + i ) ) {
 		            trap_SendServerCommand( i, "cp \"Your GUID is not secure\"" );
-		                return "Duplicate GUID";
+		                //return "Duplicate GUID"; FIXME XXX TODO
 		        }
-		        trap_DropClient( i, "Ghost" );
+		        //trap_DropClient( i, "Ghost" ); FIXME XXX TODO
 		    }
 		}
 		    
