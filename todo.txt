@@ -4,3 +4,8 @@ Change vote message from 2/3 players to something more relevant
 
 saynobeep: make prefix settable from cvar
 
+railgun color to cvar?
+
+teambalancing
+
+\myspeed should output player's stats in spect not own
