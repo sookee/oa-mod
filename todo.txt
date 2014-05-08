@@ -9,3 +9,5 @@ railgun color to cvar?
 teambalancing
 
 \myspeed should output player's stats in spect not own
+
+We have a request for a starting sound (some kind of announcement or music?)
