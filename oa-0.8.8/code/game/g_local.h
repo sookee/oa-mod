@@ -103,8 +103,10 @@ typedef struct
     int holyShitFrags;      // I fragged the carrier right before he scores
     int holyShitFragged;    // I got fragged right before i could score
 	
-	unsigned int averageSpeed;
-        int measurementCount;
+	unsigned int distanceRan;
+	unsigned int distanceRanWithFlag;
+        int distanceCount;
+        int distanceCountFlag;
 
 } stats_t;
 

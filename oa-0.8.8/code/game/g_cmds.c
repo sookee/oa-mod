@@ -940,6 +940,7 @@ void Cmd_Team_f( gentity_t *ent ) {
 				break;
 			default:
 				trap_SendServerCommand( ent-g_entities, "print \"You are already in Spectator Mode.\n\"" );
+				SetTeam( ent, s );
 			}
 	} else {
 		if( !force ) {
@@ -1546,9 +1547,16 @@ void Cmd_GameCommand_f( gentity_t *ent ) {
 
 void Cmd_GetMySpeed_f( gentity_t *ent ) 
 {
-	if ( ent->client )
-		trap_SendServerCommand( ent-g_entities, va("print \"%i\n\"", ent->client->stats.averageSpeed) );
+	if ( ent->client ) {
+		if ( ( g_gametype.integer == GT_CTF ) || ( g_gametype.integer == GT_CTF_ELIMINATION ) ) {
+			trap_SendServerCommand( ent-g_entities, va("print \"You ran %iu in %is without and %is in %is with the flag.\n\"", 
+				ent->client->stats.distanceRan, ent->client->stats.distanceCount , ent->client->stats.distanceRanWithFlag, ent->client->stats.distanceCountFlag) );
+		} else {
+			trap_SendServerCommand( ent-g_entities, va("print \"You ran %iu in %is.\n\"", ent->client->stats.distanceRan , ent->client->stats.distanceCount) );
+		}
+	}
 }
+
 void Cmd_SetSpectSpeed_f( gentity_t *ent ) 
 {
 	int		speed;
@@ -1941,10 +1949,10 @@ void Cmd_Vote_f( gentity_t *ent ) {
 		trap_SendServerCommand( ent-g_entities, "print \"No vote in progress.\n\"" );
 		return;
 	}
-	/*if ( ent->client->ps.eFlags & EF_VOTED ) {
+	if ( ent->client->ps.eFlags & EF_VOTED ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Vote already cast.\n\"" );
 		return;
-	}*/
+	}
 	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		if ( g_allowSpectatorVote.integer == 0 ) {
 			trap_SendServerCommand( ent-g_entities, "print \"Not allowed to vote as spectator.\n\"" );

@@ -1637,7 +1637,7 @@ static qboolean SV_ClientCommand( client_t *cl, msg_t *msg ) {
                 if ( svs.time < cl->nextReliableTime )
                 {
                         //register this as spam event
-                        if ( cl->spamCount < sv_floodProtectAllowedSpams->integer )
+                        if ( cl->spamCount < (sv_floodProtectAllowedSpams->integer-1) )
                         {
                                 cl->spamCount++;
                                 cl->nextReliableTime = svs.time + normalCmdTime;
