@@ -1160,7 +1160,13 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
             targ->client->stats.pushesRecv++;
             
             if(attacker->client)
+            {
                 attacker->client->stats.pushesDone++;
+                // SooKee adding this to log
+                G_LogPrintf( "Push: %i %i: %s pushed %s\n"
+                		, attacker->client->ps.clientNum, targ->client->ps.clientNum
+                		, attacker->client->pers.netname, targ->client->pers.netname);
+            }
         }
         
         
