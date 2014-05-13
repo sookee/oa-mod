@@ -1240,13 +1240,6 @@ static void CG_ServerCommand( void ) {
 		return;
 	}
 
-	if ( !strcmp( cmd, "chatnobeep" ) ) {
-		Q_strncpyz( text, CG_Argv(1), MAX_SAY_TEXT );
-		CG_RemoveChatEscapeChar( text );
-		CG_Printf( "%s\n", text );
-		return;
-	}
-
 	if ( !strcmp( cmd, "tchat" ) ) {
                 if( cg_teamChatBeep.integer )
                         trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );

@@ -216,6 +216,46 @@ void Svcmd_Chat_f( void )
     G_LogPrintf("chat: %s\n", ConcatArgs( 1 ) );
 }
 
+// sookee: console tell
+void Svcmd_MsgTo_f( void )
+{
+	char cmd[12];
+	char arg1[6];
+	int clientNum;
+
+	trap_Argv(0, cmd, sizeof(cmd));
+
+	if(trap_Argc() < 3 )
+	{
+		G_Printf("usage: %s <slot|name> <message>\n", cmd);
+		return;
+	}
+
+	trap_Argv(1, arg1, sizeof(arg1));
+
+	clientNum = G_ClientNumberFromString(arg1);
+
+	if(clientNum == -1 || clientNum >= MAX_CLIENTS)
+	{
+		G_Printf("error: unknown player\n");
+		return;
+	}
+
+	gentity_t* ent = level.gentities + clientNum;
+
+	if(!ent || !ent->client)
+	{
+		G_Printf("error: unknown client\n");
+		return;
+	}
+
+	if(Q_stricmpn(cmd, "msg_to", sizeof(cmd)))
+		trap_SendServerCommand(clientNum, va( "chat \"%s\"", ConcatArgs(2)));
+	else
+		trap_SendServerCommand(clientNum, va( "print \"%s\"", ConcatArgs(2)));
+   // G_LogPrintf("tell: [%s] %s\n", (level.gentities + clientNum)->client->pers.netname, ConcatArgs(2));
+}
+
 /*
 =============
 Svcmd_ListIP_f
