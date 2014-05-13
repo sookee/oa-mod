@@ -1163,10 +1163,17 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
             if(attacker->client)
             {
                 attacker->client->stats.pushesDone++;
-                // SooKee adding this to log
+                // SooKee adding this to log and all clients
                 G_LogPrintf( "Push: %i %i: %s pushed %s\n"
                 		, attacker->client->ps.clientNum, targ->client->ps.clientNum
                 		, attacker->client->pers.netname, targ->client->pers.netname);
+
+                int i;
+                for(i = 0; i < level.maxclients; ++i)
+                	if(level.gentities[0].client)
+                		trap_SendServerCommand(i, va( "print \"%s was ^3pushed ^7by %s\n\""
+                				, targ->client->pers.netname, attacker->client->pers.netname) );
+                // - SooKee
             }
         }
         
