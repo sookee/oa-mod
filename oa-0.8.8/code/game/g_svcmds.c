@@ -501,7 +501,8 @@ struct
   { "say_team", qtrue, Svcmd_TeamMessage_f },
   { "say", qtrue, Svcmd_MessageWrapper },
   { "chat", qtrue, Svcmd_Chat_f },
-  { "tell", qtrue, Svcmd_Tell_f }, // sookee
+  { "msg_to", qfalse, Svcmd_MsgTo_f }, // sookee
+  { "msg_to_beep", qfalse, Svcmd_MsgTo_f }, // sookee
   /*{ "m", qtrue, Svcmd_MessageWrapper },
   { "a", qtrue, Svcmd_MessageWrapper },
   { "bp", qtrue, Svcmd_BannerPrint_f }, */

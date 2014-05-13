@@ -217,13 +217,17 @@ void Svcmd_Chat_f( void )
 }
 
 // sookee: console tell
-void Svcmd_Tell_f( void )
+void Svcmd_MsgTo_f( void )
 {
+	char cmd[12];
 	char arg1[6];
 	int clientNum;
+
+	trap_Argv(0, cmd, sizeof(cmd));
+
 	if(trap_Argc() < 3 )
 	{
-		G_Printf("usage: tell <slot> <message>\n");
+		G_Printf("usage: %s <slot|name> <message>\n", cmd);
 		return;
 	}
 
@@ -245,8 +249,11 @@ void Svcmd_Tell_f( void )
 		return;
 	}
 
-    trap_SendServerCommand(clientNum, va( "chat \"%s\"", ConcatArgs(2)));
-    G_LogPrintf("tell: [%s] %s\n", (level.gentities + clientNum)->client->pers.netname, ConcatArgs(2));
+	if(Q_stricmpn(cmd, "msg_to", sizeof(cmd)))
+		trap_SendServerCommand(clientNum, va( "chat \"%s\"", ConcatArgs(2)));
+	else
+		trap_SendServerCommand(clientNum, va( "print \"%s\"", ConcatArgs(2)));
+   // G_LogPrintf("tell: [%s] %s\n", (level.gentities + clientNum)->client->pers.netname, ConcatArgs(2));
 }
 
 /*
