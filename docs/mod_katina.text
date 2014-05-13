@@ -5,3 +5,4 @@ mod_katina.text
 Fix: !mute now works
 Add: callvote to log file.
 	Callvote: <num> <type>: <playername> has called a vote for '<vote type>'
+Add: msg_to[_beep]? <num> <message> // send message to one player beep or not
