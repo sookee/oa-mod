@@ -1854,7 +1854,9 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 
         ent->client->pers.voteCount++;
 	trap_SendServerCommand( -1, va("print \"%s called a vote.\n\"", ent->client->pers.netname ) );
-	G_LogPrintf("Callvote: %i %s: %s has called a vote for %s\n", ent-g_entities, arg1
+
+	// sookee: added callvote to log file
+	G_LogPrintf("Callvote: %i %s: %s has called a vote for '%s'\n", ent-g_entities, arg1
 			, ent->client->pers.netname, arg1);
 
 	// start the voting, the caller autoamtically votes yes

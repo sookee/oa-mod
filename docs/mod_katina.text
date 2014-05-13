@@ -1,0 +1,7 @@
+mod_katina.text
+ Created on: 13 May 2014
+     Author: oasookee@gmail.com
+     
+Fix: !mute now works
+Add: callvote to log file.
+	Callvote: <num> <type>: <playername> has called a vote for '<vote type>'
