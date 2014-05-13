@@ -1383,6 +1383,7 @@ void Svcmd_BannerPrint_f( void );
 void Svcmd_EjectClient_f( void );
 void Svcmd_DumpUser_f( void );
 void Svcmd_Chat_f( void );
+void Svcmd_Tell_f( void ); // sookee
 void Svcmd_ListIP_f( void );
 void Svcmd_MessageWrapper( void );
 
