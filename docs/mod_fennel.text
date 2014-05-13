@@ -1,0 +1,23 @@
+mod_fennel.text
+ Created on: 13 May 2014
+     Author: oasookee@gmail.com
+
+Add: added log events for various stats
+	Weapon Usage Update
+	WeaponUsage: <client#> <weapon#> <#shotsFired>
+	
+	
+	MOD (Means of Death = Damage Type) Damage Update
+	MODDamage: <client#> <mod#> <#hits> <damageDone> <#hitsRecv> <damageRecv> <weightedHits>
+	
+	
+	Player Stats Update
+	PlayerStats: <client#>
+	             <fragsFace> <fragsBack> <fraggedInFace> <fraggedInBack>
+	             <spawnKillsDone> <spanwKillsRecv>
+	             <pushesDone> <pushesRecv>
+	             <healthPickedUp> <armorPickedUp>
+				 <holyShitFrags> <holyShitFragged>
+				 
+Add: log event for team pushing with railgun
+	Push: <num1> <num2>: <playername2> was pushed by <playername1>
