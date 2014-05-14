@@ -1137,6 +1137,8 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		return;
 	}
 
+	int a = level.time;
+
 	trap_SendServerCommand( other-g_entities, va("%s \"%s%c%c%s\"", 
 		mode == SAY_TEAM ? "tchat" : "chat",
 		name, Q_COLOR_ESCAPE, color, message));
@@ -2306,6 +2308,7 @@ void ClientCommand( int clientNum )
     int       i;
 
     ent = g_entities + clientNum;
+	ent->client->lastActive = level.time +1000;
     if( !ent->client )
         return;   // not fully in game yet
 

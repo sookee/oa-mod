@@ -1562,9 +1562,9 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		    if( !Q_stricmp( client->pers.guid, level.clients[ i ].pers.guid ) ) {
 		        if( !G_ClientIsLagging( level.clients + i ) ) {
 		            trap_SendServerCommand( i, "cp \"Your GUID is not secure\"" );
-		                //return "Duplicate GUID"; FIXME XXX TODO
+		                return "Duplicate GUID";
 		        }
-		        //trap_DropClient( i, "Ghost" ); FIXME XXX TODO
+		        trap_DropClient( i, "Ghost" );
 		    }
 		}
 		    
@@ -2184,7 +2184,7 @@ else
 	client->ps.pm_time = 100;
 
 	client->respawnTime = level.time;
-	client->inactivityTime = level.time + g_inactivity.integer * 1000;
+	client->lastActive = level.time +1000;
 	client->latched_buttons = 0;
 
 	// set default animations
