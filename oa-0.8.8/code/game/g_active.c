@@ -385,23 +385,23 @@ qboolean ClientInactivityTimer( gclient_t *client ) {
 	if ( ! g_inactivity.integer ) {
 		// give everyone some time, so if the operator sets g_inactivity during
 		// gameplay, everyone isn't kicked
-		client->lastActive = level.time;
+		client->lastActive = level.time + 1000;
 		client->inactivityWarning = qfalse;
 	} else if ( client->pers.cmd.forwardmove || 
 		client->pers.cmd.rightmove || 
 		client->pers.cmd.upmove ||
 		(client->pers.cmd.buttons & BUTTON_ATTACK) ) {
-		client->lastActive = level.time;
+		client->lastActive = level.time + 1000;
 		client->inactivityWarning = qfalse;
 	} else if ( !client->pers.localClient ) {
 		if ( (level.time > (client->lastActive + (g_inactivity.integer * 1000) - 20000)) && (!client->inactivityWarning) ) {
 			client->inactivityWarning = qtrue;
 			trap_SendServerCommand( client - level.clients, va("cp \"%i seconds until ^1inactivity DROP!\n\"", (client->lastActive + (g_inactivity.integer * 1000) -level.time )/1000  )) ;
 		}
-		if ( (g_inactivityTpSpect.integer) && (level.time > (client->lastActive + ( g_inactivityToSpect.integer * 1000) - 10000)) ) {
+		if ( (g_inactivityToSpect.integer) && (level.time > (client->lastActive + ( g_inactivityToSpect.integer * 1000) - 10000)) ) {
 			trap_SendServerCommand( client - level.clients, va("cp \"%i seconds until forced SPECT!\n\"", (client->lastActive + (g_inactivityToSpect.integer * 1000) -level.time )/1000  )) ;
 		}
-		if (  (g_inactivityTpSpect.integer) && (level.time >  (g_inactivityToSpect.integer * 1000) + client->lastActive) && !(client->inactivityWarning) ) {
+		if (  (g_inactivityToSpect.integer) && (level.time >  (g_inactivityToSpect.integer * 1000) + client->lastActive) && !(client->inactivityWarning) ) {
 			//trap_DropClient( client - level.clients, "Dropped due to inactivity" );
 			SetTeam( &g_entities[client->ps.clientNum] , "s" );
 		}
