@@ -398,10 +398,10 @@ qboolean ClientInactivityTimer( gclient_t *client ) {
 			client->inactivityWarning = qtrue;
 			trap_SendServerCommand( client - level.clients, va("cp \"%i seconds until ^1inactivity DROP!\n\"", (client->lastActive + (g_inactivity.integer * 1000) -level.time )/1000  )) ;
 		}
-		if ( (level.time > (client->lastActive + ( g_inactivityToSpect.integer * 1000) - 10000)) ) {
+		if ( (g_inactivityTpSpect.integer) && (level.time > (client->lastActive + ( g_inactivityToSpect.integer * 1000) - 10000)) ) {
 			trap_SendServerCommand( client - level.clients, va("cp \"%i seconds until forced SPECT!\n\"", (client->lastActive + (g_inactivityToSpect.integer * 1000) -level.time )/1000  )) ;
 		}
-		if ( (level.time >  (g_inactivityToSpect.integer * 1000) + client->lastActive) && !(client->inactivityWarning) ) {
+		if (  (g_inactivityTpSpect.integer) && (level.time >  (g_inactivityToSpect.integer * 1000) + client->lastActive) && !(client->inactivityWarning) ) {
 			//trap_DropClient( client - level.clients, "Dropped due to inactivity" );
 			SetTeam( &g_entities[client->ps.clientNum] , "s" );
 		}

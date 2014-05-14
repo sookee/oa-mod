@@ -260,7 +260,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_forcerespawn, "g_forcerespawn", "20", 0, 0, qtrue },
         { &g_respawntime, "g_respawntime", "0", CVAR_ARCHIVE, 0, qtrue },
 	{ &g_inactivity, "g_inactivity", "0", 0, 0, qtrue },
-	{ &g_inactivityToSpect, "g_inactivityToSpect", "0", 0, 0, qtrue },
+	{ &g_inactivityToSpect, "g_inactivityToSpect", "60", 0, 0, qtrue },
 	{ &g_debugMove, "g_debugMove", "0", 0, 0, qfalse },
 	{ &g_debugDamage, "g_debugDamage", "0", 0, 0, qfalse },
 	{ &g_debugAlloc, "g_debugAlloc", "0", 0, 0, qfalse },
