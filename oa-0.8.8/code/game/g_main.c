@@ -62,6 +62,7 @@ vmCvar_t	g_quadfactor;
 vmCvar_t	g_forcerespawn;
 vmCvar_t	g_respawntime;
 vmCvar_t	g_inactivity;
+vmCvar_t	g_inactivityToSpect;
 vmCvar_t	g_debugMove;
 vmCvar_t	g_debugDamage;
 vmCvar_t	g_debugAlloc;
@@ -259,6 +260,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_forcerespawn, "g_forcerespawn", "20", 0, 0, qtrue },
         { &g_respawntime, "g_respawntime", "0", CVAR_ARCHIVE, 0, qtrue },
 	{ &g_inactivity, "g_inactivity", "0", 0, 0, qtrue },
+	{ &g_inactivityToSpect, "g_inactivityToSpect", "0", 0, 0, qtrue },
 	{ &g_debugMove, "g_debugMove", "0", 0, 0, qfalse },
 	{ &g_debugDamage, "g_debugDamage", "0", 0, 0, qfalse },
 	{ &g_debugAlloc, "g_debugAlloc", "0", 0, 0, qfalse },
@@ -700,8 +702,8 @@ void pollSpeed( gentity_t *ent )
 
         /*update avg speed for all clients (but not specs)*/
         for ( i=0 ; i<level.maxclients ; i++ ) {
+		client = &level.clients[i];
 		if ( client->sess.sessionTeam != TEAM_SPECTATOR ) {
-	                client = &level.clients[i];
         	        vel = client->ps.velocity;
                 	playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account too?
 
