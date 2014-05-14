@@ -698,23 +698,25 @@ void pollSpeed( gentity_t *ent )
         ent->think = pollSpeed;
         ent->nextthink = level.time + 1000;
 
-        /*update avg speed for all clients*/
+        /*update avg speed for all clients (but not specs)*/
         for ( i=0 ; i<level.maxclients ; i++ ) {
-                client = &level.clients[i];
-                vel = client->ps.velocity;
-                playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account too?
+		if ( client->sess.sessionTeam != TEAM_SPECTATOR ) {
+	                client = &level.clients[i];
+        	        vel = client->ps.velocity;
+                	playerSpeed = sqrt(vel[0] * vel[0] + vel[1] * vel[1]); //TODO take vertical speed into account too?
 
-		if ( client->ps.powerups[PW_REDFLAG] ||
-                	client->ps.powerups[PW_BLUEFLAG] ||
-                	client->ps.powerups[PW_NEUTRALFLAG] ) 
-		{
-	        	        client->stats.distanceCountFlag++;
-        	        	client->stats.distanceRanWithFlag += playerSpeed;
-		} else {
-	        	        client->stats.distanceCount++;
-        	        	client->stats.distanceRan += playerSpeed;
+			if ( client->ps.powerups[PW_REDFLAG] ||
+        	        	client->ps.powerups[PW_BLUEFLAG] ||
+                		client->ps.powerups[PW_NEUTRALFLAG] ) 
+			{
+		        	        client->stats.distanceCountFlag++;
+        		        	client->stats.distanceRanWithFlag += playerSpeed;
+			} else {
+		        	        client->stats.distanceCount++;
+        		        	client->stats.distanceRan += playerSpeed;
+			}
+        	        //trap_SendServerCommand( i , va( "print \"avgspeed %i\n\"", avgSpeed ) );
 		}
-                //trap_SendServerCommand( i , va( "print \"avgspeed %i\n\"", avgSpeed ) );
         }
 }
 
