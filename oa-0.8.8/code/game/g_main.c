@@ -404,6 +404,7 @@ static cvarTable_t		gameCvarTable[] = {
 
         { &g_timestamp_startgame, "g_timestamp", "0001-01-01 00:00:00", CVAR_SERVERINFO, 0, qfalse},
         { &mod_katina, "mod_katina", "0.1-beta", CVAR_SERVERINFO|CVAR_ROM, 0, qfalse}
+
 };
 
 // bk001129 - made static to avoid aliasing
