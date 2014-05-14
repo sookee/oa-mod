@@ -1170,7 +1170,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
                 int i;
                 for(i = 0; i < level.maxclients; ++i)
                 	if(level.gentities[0].client)
-                		trap_SendServerCommand(i, va( "print \"%s was ^3pushed ^7by %s\n\""
+                		trap_SendServerCommand(i, va( "print \"%s^7 was ^3pushed ^7by %s\n\""
                 				, targ->client->pers.netname, attacker->client->pers.netname) );
                 // - SooKee
             }
