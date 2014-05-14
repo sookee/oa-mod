@@ -2184,7 +2184,7 @@ else
 	client->ps.pm_time = 100;
 
 	client->respawnTime = level.time;
-	client->lastActive = level.time;
+	client->lastActive = level.time +1000;
 	client->latched_buttons = 0;
 
 	// set default animations

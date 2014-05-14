@@ -2304,6 +2304,7 @@ void ClientCommand( int clientNum )
     int       i;
 
     ent = g_entities + clientNum;
+	ent->client->lastActive = level.time +1000;
     if( !ent->client )
         return;   // not fully in game yet
 

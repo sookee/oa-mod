@@ -394,7 +394,7 @@ qboolean ClientInactivityTimer( gclient_t *client ) {
 		client->lastActive = level.time + 1000;
 		client->inactivityWarning = qfalse;
 	} else if ( !client->pers.localClient ) {
-		if ( (level.time > (client->lastActive + (g_inactivity.integer * 1000) - 20000)) && (!client->inactivityWarning) ) {
+		if ( (level.time > (client->lastActive + (g_inactivity.integer * 1000) - 10000)) && (!client->inactivityWarning) ) {
 			client->inactivityWarning = qtrue;
 			trap_SendServerCommand( client - level.clients, va("cp \"%i seconds until ^1inactivity DROP!\n\"", (client->lastActive + (g_inactivity.integer * 1000) -level.time )/1000  )) ;
 		}
