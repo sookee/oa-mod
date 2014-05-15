@@ -1043,6 +1043,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
         
 	vec3_t		bouncedir, impactpoint;
     
+	// sookee: crash warning
+	if(mod < 0 || mod >= MOD_NUM_DAMAGETYPES)
+		G_LogPrintf("CRASH WARNING: Value of mod out of bounds: %d at %s [%d]\n", mod, __FILE__, __LINE__);
 
 	if (!targ->takedamage) {
 		return;
@@ -1353,21 +1356,23 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		}
         
         // Katina stats
-        if(targ->client)
-        {
-            targ->client->stats.numHitsRecv[mod]++;
-            targ->client->stats.damageRecv[mod] += take;
-        }
-        
-        if(attacker != targ && attacker && attacker->client && !OnSameTeam(targ, attacker))
-        {
-            attacker->client->stats.numHits[mod]++;
-            attacker->client->stats.damageDone[mod] += take;
-            
-            if(!(dflags & DAMAGE_RADIUS))
-                attacker->client->stats.weightedHits[mod] += 1.0f;
-        }
+		if(mod >= 0 && mod < MOD_NUM_DAMAGETYPES) // sookee: paranoid crash check
+		{
+			if(targ->client)
+			{
+				targ->client->stats.numHitsRecv[mod]++;
+				targ->client->stats.damageRecv[mod] += take;
+			}
 
+			if(attacker != targ && attacker && attacker->client && !OnSameTeam(targ, attacker))
+			{
+				attacker->client->stats.numHits[mod]++;
+				attacker->client->stats.damageDone[mod] += take;
+
+				if(!(dflags & DAMAGE_RADIUS))
+					attacker->client->stats.weightedHits[mod] += 1.0f;
+			}
+		}
         // Kill
 		if ( targ->health <= 0 ) {
 			if ( client )
@@ -1467,6 +1472,10 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
 	int			i, e;
 	qboolean	hitClient = qfalse;
 
+	// sookee: crash warning
+	if(mod < 0 || mod >= MOD_NUM_DAMAGETYPES)
+		G_LogPrintf("CRASH WARNING: Value of mod out of bounds: %d at %s [%d]\n", mod, __FILE__, __LINE__);
+
 	if ( radius < 1 ) {
 		radius = 1;
 	}
@@ -1517,7 +1526,8 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
             
             // Katina stats: Accumulate weighted splash hits
             if(attacker != ent && attacker && attacker->client && !OnSameTeam(ent, attacker))
-                attacker->client->stats.weightedHits[mod] += hitWeight;
+            	if(mod >=0 && mod < MOD_NUM_DAMAGETYPES)
+            		attacker->client->stats.weightedHits[mod] += hitWeight;
 		}
 	}
 
