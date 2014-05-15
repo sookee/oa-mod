@@ -935,7 +935,11 @@ void FireWeapon( gentity_t *ent ) {
 	}
     
     // Katina stats
-    ent->client->stats.numShots[ent->s.weapon]++;
+	// sookee: crash warning
+	if(ent->s.weapon < 0 || ent->s.weapon >= WP_NUM_WEAPONS)
+		G_LogPrintf("CRASH WARNING: Value of ent->s.weapon out of bounds: %d at %s [%d]\n", ent->s.weapon, __FILE__, __LINE__);
+	else
+		ent->client->stats.numShots[ent->s.weapon]++;
 
 	// set aiming directions
 	AngleVectors (ent->client->ps.viewangles, forward, right, up);
