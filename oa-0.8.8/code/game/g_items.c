@@ -276,10 +276,16 @@ int Pickup_Weapon (gentity_t *ent, gentity_t *other) {
 int Pickup_Health (gentity_t *ent, gentity_t *other) {
 	int			max;
 	int			quantity;
-    int         healthBefore = other->health;
+    int         healthBefore;
+
+    // sookee: crash paranoia
+    if(!other || !other->client)
+		G_LogPrintf("CRASH WARNING: gentity other not valid: %x at %s [%d]\n", other, __FILE__, __LINE__);
 
     if( !other->client)
         return RESPAWN_HEALTH;
+
+    healthBefore = other->health;
         
 	// small and mega healths will go over the max
 	if( other->client && bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD ) {
@@ -319,8 +325,17 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 
 int Pickup_Armor( gentity_t *ent, gentity_t *other ) {
 	int		upperBound;
-    int     armorBefore = other->client->ps.stats[STAT_ARMOR];
+    int     armorBefore;
     
+    // sookee: crash paranoia
+    if(!other || !other->client)
+		G_LogPrintf("CRASH WARNING: gentity other not valid: %x at %s [%d]\n", other, __FILE__, __LINE__);
+
+    if(!other->client)
+    	return RESPAWN_ARMOR;
+
+    armorBefore = other->client->ps.stats[STAT_ARMOR];
+
 	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
 
 	if( other->client && bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD ) {
