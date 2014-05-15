@@ -227,7 +227,7 @@ void Svcmd_MsgTo_f( void )
 
 	if(trap_Argc() < 3 )
 	{
-		G_Printf("usage: %s <slot|name> <message>\n", cmd);
+		G_Printf("usage: %s <slot|name|-1> <message>\n", cmd);
 		return;
 	}
 
@@ -235,25 +235,38 @@ void Svcmd_MsgTo_f( void )
 
 	clientNum = G_ClientNumberFromString(arg1);
 
-	if(clientNum == -1 || clientNum >= MAX_CLIENTS)
+	if(clientNum != -1 && clientNum >= MAX_CLIENTS)
 	{
 		G_Printf("error: unknown player\n");
 		return;
 	}
 
-	gentity_t* ent = level.gentities + clientNum;
-
-	if(!ent || !ent->client)
+	if(clientNum == -1) // send to all clients
 	{
-		G_Printf("error: unknown client\n");
-		return;
+		for(clientNum = 0; clientNum < MAX_CLIENTS; ++clientNum)
+		{
+			if(level.gentities[clientNum].client)
+			{
+				if(Q_stricmpn(cmd, "msg_to", sizeof(cmd)))
+					trap_SendServerCommand(clientNum, va( "chat \"%s\n\"", ConcatArgs(2)));
+				else
+					trap_SendServerCommand(clientNum, va( "print \"%s\n\"", ConcatArgs(2)));
+			}
+		}
 	}
-
-	if(Q_stricmpn(cmd, "msg_to", sizeof(cmd)))
-		trap_SendServerCommand(clientNum, va( "chat \"%s\"", ConcatArgs(2)));
 	else
-		trap_SendServerCommand(clientNum, va( "print \"%s\"", ConcatArgs(2)));
-   // G_LogPrintf("tell: [%s] %s\n", (level.gentities + clientNum)->client->pers.netname, ConcatArgs(2));
+	{
+		if(!level.gentities[clientNum].client)
+		{
+			G_Printf("error: unknown client\n");
+			return;
+		}
+
+		if(Q_stricmpn(cmd, "msg_to", sizeof(cmd)))
+			trap_SendServerCommand(clientNum, va( "chat \"%s\n\"", ConcatArgs(2)));
+		else
+			trap_SendServerCommand(clientNum, va( "print \"%s\n\"", ConcatArgs(2)));
+	}
 }
 
 /*
