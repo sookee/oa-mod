@@ -864,7 +864,9 @@ qboolean G_admin_ban_check( char *userinfo, char *reason, int rlen )
     if( g_admin_bans[ i ]->expires != 0 &&
          ( g_admin_bans[ i ]->expires - t ) < 1 )
       continue;
-    if( strstr( ip, g_admin_bans[ i ]->ip ) )
+    // sookee: make ip checl left-justified (starts with substring)
+//    if( strstr( ip, g_admin_bans[ i ]->ip ) )
+    if( strstr( ip, g_admin_bans[ i ]->ip ) == ip)
     {
       char duration[ 32 ];
       G_admin_duration( ( g_admin_bans[ i ]->expires - t ),
