@@ -879,7 +879,9 @@ qboolean G_admin_ban_check( char *userinfo, char *reason, int rlen )
         g_admin_bans[ i ]->reason,
         duration
       );
-      G_Printf( "Banned player tried to connect from IP %s\n", ip );
+      // sookee: Also want to see this in the log file
+      // G_Printf( "Banned player tried to connect from IP %s\n", ip );
+      G_LogPrintf( "Banned player tried to connect from IP %s\n", ip );
       return qtrue;
     }
     if( *guid && !Q_stricmp( g_admin_bans[ i ]->guid, guid ) )
@@ -895,7 +897,9 @@ qboolean G_admin_ban_check( char *userinfo, char *reason, int rlen )
         g_admin_bans[ i ]->reason,
         duration
       );
-      G_Printf( "Banned player tried to connect with GUID %s\n", guid );
+      // sookee: Also want to see this in the log file
+      // G_Printf( "Banned player tried to connect with GUID %s\n", guid );
+      G_LogPrintf( "Banned player tried to connect with GUID %s\n", guid );
       return qtrue;
     }
   }
