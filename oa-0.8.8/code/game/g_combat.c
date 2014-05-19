@@ -1039,6 +1039,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	int			asave;
 	int			knockback;
 	int			max;
+    int i;
         
 	vec3_t		bouncedir, impactpoint;
     
@@ -1170,7 +1171,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
                 		, attacker->client->ps.clientNum, targ->client->ps.clientNum
                 		, attacker->client->pers.netname, targ->client->pers.netname);
 
-                int i;
                 for(i = 0; i < level.maxclients; ++i)
                 	if(level.gentities[0].client)
                 		trap_SendServerCommand(i, va( "print \"%s^7 was ^3pushed ^7by %s\n\""
