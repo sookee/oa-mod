@@ -864,7 +864,9 @@ qboolean G_admin_ban_check( char *userinfo, char *reason, int rlen )
     if( g_admin_bans[ i ]->expires != 0 &&
          ( g_admin_bans[ i ]->expires - t ) < 1 )
       continue;
-    if( strstr( ip, g_admin_bans[ i ]->ip ) )
+    // sookee: make ip checl left-justified (starts with substring)
+//    if( strstr( ip, g_admin_bans[ i ]->ip ) )
+    if( strstr( ip, g_admin_bans[ i ]->ip ) == ip)
     {
       char duration[ 32 ];
       G_admin_duration( ( g_admin_bans[ i ]->expires - t ),
@@ -877,7 +879,9 @@ qboolean G_admin_ban_check( char *userinfo, char *reason, int rlen )
         g_admin_bans[ i ]->reason,
         duration
       );
-      G_Printf( "Banned player tried to connect from IP %s\n", ip );
+      // sookee: Also want to see this in the log file
+      // G_Printf( "Banned player tried to connect from IP %s\n", ip );
+      G_LogPrintf( "Banned player tried to connect from IP %s\n", ip );
       return qtrue;
     }
     if( *guid && !Q_stricmp( g_admin_bans[ i ]->guid, guid ) )
@@ -893,7 +897,9 @@ qboolean G_admin_ban_check( char *userinfo, char *reason, int rlen )
         g_admin_bans[ i ]->reason,
         duration
       );
-      G_Printf( "Banned player tried to connect with GUID %s\n", guid );
+      // sookee: Also want to see this in the log file
+      // G_Printf( "Banned player tried to connect with GUID %s\n", guid );
+      G_LogPrintf( "Banned player tried to connect with GUID %s\n", guid );
       return qtrue;
     }
   }

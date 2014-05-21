@@ -832,6 +832,9 @@ qboolean	ConsoleCommand( void );
 void G_ProcessIPBans(void);
 qboolean G_FilterPacket (char *from);
 
+// sookee
+void Svcmd_SoundPlay_f(void);
+
 //KK-OAX Added this to make accessible from g_svcmds_ext.c
 gclient_t	*ClientForString( const char *s );
 
