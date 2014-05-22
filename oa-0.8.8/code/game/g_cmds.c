@@ -1112,6 +1112,8 @@ G_Say
 */
 
 static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char *name, const char *message ) {
+	int a;
+
 	if (!other) {
 		return;
 	}
@@ -1137,7 +1139,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		return;
 	}
 
-	int a = level.time;
+	a = level.time;
 
 	trap_SendServerCommand( other-g_entities, va("%s \"%s%c%c%s\"", 
 		mode == SAY_TEAM ? "tchat" : "chat",
