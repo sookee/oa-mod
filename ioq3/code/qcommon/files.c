@@ -3341,7 +3341,7 @@ static void FS_Startup( const char *gameName )
 	FS_ReorderPurePaks();
 
 	// print the current search paths
-	FS_Path_f();
+	// FS_Path_f(); // sookee: removed to reduce spam (client can type /path to get this info)
 
 	fs_gamedirvar->modified = qfalse; // We just loaded, it's not modified
 
