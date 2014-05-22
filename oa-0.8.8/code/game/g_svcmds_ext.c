@@ -263,7 +263,7 @@ void Svcmd_MsgTo_f( void )
 		}
 
 		if(Q_stricmpn(cmd, "msg_to", sizeof(cmd)))
-			trap_SendServerCommand(clientNum, va( "chat \"%s\n\"", ConcatArgs(2)));
+			trap_SendServerCommand(clientNum, va( "chat \"%s\"", ConcatArgs(2)));
 		else
 			trap_SendServerCommand(clientNum, va( "print \"%s\n\"", ConcatArgs(2)));
 	}
