@@ -304,6 +304,7 @@ typedef struct {
 //Used To Track Name Changes
     int         nameChangeTime;
     int         nameChanges;
+    char ignoreList[MAX_CLIENTS];
     
 } clientPersistant_t;
 
@@ -1389,6 +1390,8 @@ void Svcmd_Chat_f( void );
 void Svcmd_MsgTo_f( void ); // sookee
 void Svcmd_ListIP_f( void );
 void Svcmd_MessageWrapper( void );
+
+void Cmd_Ignore_f( gentity_t *ent ); // sookee: added this here (better place for this?)
 
 #include "g_killspree.h"
 #include "g_admin.h"

@@ -288,7 +288,7 @@ void Svcmd_SoundPlay_f( void )
 		if(level.gentities[num].client)
 		{
 //			if((soundIndex = G_SoundIndex(va("sound/world/%s", name))))
-			if((soundIndex = G_FindConfigstringIndex(va("sound/world/%s", name), CS_SOUNDS, MAX_SOUNDS, qfalse)))
+			if((soundIndex = G_FindConfigstringIndex(va("%s", name), CS_SOUNDS, MAX_SOUNDS, qfalse)))
 				G_Sound(level.gentities + num, CHAN_AUTO, soundIndex);
 		}
 			//G_Sound(level.gentities + num, CHAN_AUTO, G_SoundIndex("sound/world/jumppad.wav"));
