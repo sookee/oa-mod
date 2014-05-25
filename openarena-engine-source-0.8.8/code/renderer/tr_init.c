@@ -228,7 +228,7 @@ static void InitOpenGL( void )
 	R_InitCommandBuffers();
 
 	// print info
-	GfxInfo_f();
+	// GfxInfo_f(); // sookee: dont need this spam, user can do /gfxinfo
 
 	// set default state
 	GL_SetDefaultState();

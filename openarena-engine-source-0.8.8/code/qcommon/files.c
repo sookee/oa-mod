@@ -2930,7 +2930,7 @@ static void FS_Startup( const char *gameName )
 	FS_ReorderPurePaks();
 
 	// print the current search paths
-	FS_Path_f();
+	//FS_Path_f(); // sookee: don't need this spam, player can do /path
 
 	fs_gamedirvar->modified = qfalse; // We just loaded, it's not modified
 
@@ -3307,6 +3307,7 @@ void FS_InitFilesystem( void ) {
 	Com_StartupVariable( "fs_basepath" );
 	Com_StartupVariable( "fs_homepath" );
 	Com_StartupVariable( "fs_game" );
+	Com_StartupVariable( "hack_guid" ); // sookee: need a better place for this
 
 	// try to start up normally
 	FS_Startup(com_basegame->string);
