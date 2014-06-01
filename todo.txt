@@ -1,13 +1,12 @@
+Fix: skivvy
+Fix: addmap.sh (need to be able to specify server)
+Mod: server mod update scripts update-test-mods.sh etc...
+Fix: vote message from 2/3 players to something more relevant
+Add: custom disable/enable server spam! so that each player can decide if he likes britney, etc.
+Mod: railgun color to cvar?
+Add: teambalancing
+Fix: \myspeed should output player's stats in spect not own
+Add: We have a request for a starting sound (some kind of announcement or music?)
+Fix: the /ignore function in branch sookee-0.1 - not working
+Mod: cvar to replace fixed 3000ms delay for all votes (sookee-0.1)
 
-
-Change vote message from 2/3 players to something more relevant
-
-saynobeep: make prefix settable from cvar
-
-railgun color to cvar?
-
-teambalancing
-
-\myspeed should output player's stats in spect not own
-
-We have a request for a starting sound (some kind of announcement or music?)
