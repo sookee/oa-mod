@@ -2169,7 +2169,7 @@ commands_t cmds[ ] =
   // normal commands
   { "team", 0, Cmd_Team_f },
   { "vote", 0, Cmd_Vote_f },
-  { "ignore", 0, Cmd_Ignore_f }, // sokee: uncommented this feature
+  { "ignore", 0, Cmd_Ignore_f }, // sookee: uncommented this feature
   { "unignore", 0, Cmd_Ignore_f },
 
   // communication commands
