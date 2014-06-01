@@ -269,6 +269,46 @@ void Svcmd_MsgTo_f( void )
 	}
 }
 
+// sookee:
+// plays sounds on the vpath /splay/name.wav
+void Svcmd_SoundPlay_f( void )
+{
+	int num;
+	char name[MAX_OSPATH];
+	int soundIndex;
+
+	if(trap_Argc() < 1 )
+	{
+		G_Printf("usage: splay <sound.wav>\n");
+		return;
+	}
+
+	trap_Argv(1, name, sizeof(name));
+	for(num = 0; num < level.maxclients; ++num)
+		if(level.gentities[num].client)
+		{
+//			if((soundIndex = G_SoundIndex(va("sound/world/%s", name))))
+			if((soundIndex = G_FindConfigstringIndex(va("%s", name), CS_SOUNDS, MAX_SOUNDS, qfalse)))
+				G_Sound(level.gentities + num, CHAN_AUTO, soundIndex);
+		}
+			//G_Sound(level.gentities + num, CHAN_AUTO, G_SoundIndex("sound/world/jumppad.wav"));
+}
+
+//void G_SplayListSounds(int clientNum, int start, int max, qboolean create)
+//{
+//	int		i;
+//	char	s[MAX_STRING_CHARS];
+//
+//	for(i = 1; i < MAX_SOUNDS; ++i)
+//	{
+//		trap_GetConfigstring(CS_SOUNDS + i, s, sizeof(s));
+//
+//		if( !s[0])
+//			break;
+//		trap_SendServerCommand(clientNum, va("print \"%s\n\"", s));
+//	}
+//}
+
 /*
 =============
 Svcmd_ListIP_f

@@ -1,0 +1,4 @@
+
+
+
+Mod: !admin ban check now checks if connecting IP *starts with* the banned IP

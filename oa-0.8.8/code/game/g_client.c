@@ -1610,6 +1610,11 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		}
 	}
 
+	// sookee: reset /ignore list
+	if(firstTime)
+		for(i = 0; i < MAX_CLIENTS; ++i)
+			client->pers.ignoreList[i] = (char) -1;
+
 	//KK-OAX Swapped these in order...seemed to help the connection process.
 	// get and distribute relevent paramters
 	ClientUserinfoChanged( clientNum );

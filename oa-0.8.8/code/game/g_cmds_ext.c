@@ -536,6 +536,42 @@ void Cmd_AdminMessage_f( gentity_t *ent )
   G_AdminMessage( prefix, "%s", msg );
 }
 
+qboolean BG_ClientListTest(const char* ignoreList, int pid) // sookee
+{
+	int i;
+	for(i = 0; i < MAX_CLIENTS; ++i)
+	{
+		if(ignoreList[i] < 0)
+			continue;
+		if(ignoreList[i] == pid)
+			return qtrue;
+	}
+	return qfalse;
+}
+
+void BG_ClientListAdd(char* ignoreList, int pid) // sookee
+{
+	int i;
+	for(i = 0; i < MAX_CLIENTS; ++i)
+	{
+		if(ignoreList[i] >= 0)
+			continue;
+		ignoreList[i] = pid;
+		return;
+	}
+}
+
+void BG_ClientListRemove(char* ignoreList, int pid) // sookee
+{
+	int i;
+	for(i = 0; i < MAX_CLIENTS; ++i)
+	{
+		if(ignoreList[i] != pid)
+			continue;
+		ignoreList[i] = (char) -1;
+		return;
+	}
+}
 
 /*
 ==============
@@ -544,7 +580,7 @@ KK-OAX Removed Static to Keep in Mod Files
 Currently Unused until I figure out how to implement it with voice chats. 
 ==============
 */
-/*void Cmd_Ignore_f( gentity_t *ent )
+void Cmd_Ignore_f( gentity_t *ent ) // sookee: uncommented feature
 {
   int pids[ MAX_CLIENTS ];
   char name[ MAX_NAME_LENGTH ];
@@ -611,7 +647,7 @@ Currently Unused until I figure out how to implement it with voice chats.
     }
   }
 }
-*/
+
 /*
 ==================
 G_ClientNumberFromString
