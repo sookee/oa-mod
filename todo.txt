@@ -1,4 +1,5 @@
 Fix: skivvy
+Fix: \where doesn't work as a spectator
 Fix: addmap.sh (need to be able to specify server)
 Mod: server mod update scripts update-test-mods.sh etc...
 Fix: vote message from 2/3 players to something more relevant
