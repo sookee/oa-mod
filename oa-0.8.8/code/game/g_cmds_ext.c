@@ -613,9 +613,9 @@ void Cmd_Ignore_f( gentity_t *ent ) // sookee: uncommented feature
   {
     if( ignore )
     {
-      if( !BG_ClientListTest( &ent->client->pers.ignoreList, pids[ i ] ) )
+      if( !BG_ClientListTest( ent->client->pers.ignoreList, pids[ i ] ) )
       {
-        BG_ClientListAdd( &ent->client->pers.ignoreList, pids[ i ] );
+        BG_ClientListAdd( ent->client->pers.ignoreList, pids[ i ] );
         ClientUserinfoChanged( ent->client->ps.clientNum );
         trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
           "ignore: added %s^7 to your ignore list\n\"",
@@ -630,9 +630,9 @@ void Cmd_Ignore_f( gentity_t *ent ) // sookee: uncommented feature
     }
     else
     {
-      if( BG_ClientListTest( &ent->client->pers.ignoreList, pids[ i ] ) )
+      if( BG_ClientListTest( ent->client->pers.ignoreList, pids[ i ] ) )
       {
-        BG_ClientListRemove( &ent->client->pers.ignoreList, pids[ i ] );
+        BG_ClientListRemove( ent->client->pers.ignoreList, pids[ i ] );
         ClientUserinfoChanged( ent->client->ps.clientNum );
         trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
           "unignore: removed %s^7 from your ignore list\n\"",
