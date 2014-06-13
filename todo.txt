@@ -1,3 +1,5 @@
+Fix: client callvote menu (should not need to "accept" custom vote item
+Fix: broken time on scoreboard
 Fix: skivvy
 Fix: \where doesn't work as a spectator
 Fix: addmap.sh (need to be able to specify server)
@@ -11,3 +13,8 @@ Add: We have a request for a starting sound (some kind of announcement or music?
 Fix: the /ignore function in branch sookee-0.1 - not working
 Mod: cvar to replace fixed 3000ms delay for all votes (sookee-0.1)
 
+Crouching Tiger Mod
+
+1) rail when crouching, pummel when standing?
+
+2) kill when crouching, push when standing?
