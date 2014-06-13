@@ -27,6 +27,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 static vec3_t	playerMins = {-15, -15, -24};
 static vec3_t	playerMaxs = {15, 15, 32};
 
+// sookee: track occasional incorrect guid & ip bug in ClientConnect
+static qboolean client_userinfo_ready[MAX_CLIENTS] = {qfalse};
+
+
 /*QUAKED info_player_deathmatch (1 0 1) (-16 -16 -24) (16 16 32) initial
 potential spawning position for deathmatch games.
 The first time a player enters the game, they will be at an 'initial' spot.
@@ -1379,10 +1383,18 @@ Sago: I am not happy with this exception
 
 	trap_SetConfigstring( CS_PLAYERS+clientNum, s );
 
+	// sookee: do this here in ClientConnect guid & ip are sometimes
+	// not correct
+	if(client_userinfo_ready[clientNum] == qtrue)
+	{
+		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
+				, clientNum , client->pers.guid, client->pers.ip);
+		client_userinfo_ready[clientNum] = qfalse;
+	}
+
 	// this is not the userinfo, more like the configstring actually
 	G_LogPrintf( "ClientUserinfoChanged: %i %s\\id\\%s\n", clientNum, s, Info_ValueForKey(userinfo, "cl_guid") );
 }
-
 
 /*
 ===========
@@ -1504,9 +1516,15 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	ClientUserinfoChanged( clientNum );
 	
 	// SooKee add IP address to log
+	// There is a bug in the engine that ocasionally the wrong guid & ip
+	// are present. They can not be trusted until the ClientUserinfoChanged
+	// event that occurs after this function exits.
+	// Hence here I set a flag that the next ClientUserInfoChanged is trustworthy
 	if(firstTime && !isBot)
-		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
-				, clientNum , client->pers.guid, client->pers.ip);
+		client_userinfo_ready[clientNum] = qtrue;
+//	if(firstTime && !isBot)
+//		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
+//				, clientNum , client->pers.guid, client->pers.ip);
 
 	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 

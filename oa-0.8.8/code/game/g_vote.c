@@ -388,6 +388,12 @@ void CheckVote( void ) {
                 trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
             }
 	} else {
+		// sookee:
+		// mod_katina pause to allow processing of log file before
+		// passing a vote
+		if ( level.time - level.voteTime < 3000 )
+			return; // pause to let katina work on log
+
 		// ATVI Q3 1.32 Patch #9, WNF
 		if ( level.voteYes > (level.numVotingClients)/2 ) {
 			// execute the command, then remove the vote
