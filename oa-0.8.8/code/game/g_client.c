@@ -1582,6 +1582,15 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		    
 	}
 
+
+	// SooKee add IP address to log
+	// There is a bug in the engine that ocasionally the wrong guid & ip
+	// are present. They can not be trusted until the ClientUserinfoChanged
+	// event that occurs after this function exits.
+	// Hence here I set a flag that the next ClientUserInfoChanged is trustworthy
+	if(firstTime && !isBot)
+		client_userinfo_ready[clientNum] = qtrue;
+
 	// if a player reconnects quickly after a disconnect, the client disconnect may never be called, thus flag can get lost in the ether
 	if (ent->inuse) {
 		G_LogPrintf("Forcing disconnect on active client: %i\n", clientNum);
@@ -1625,17 +1634,6 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	//KK-OAX Swapped these in order...seemed to help the connection process.
 	// get and distribute relevent paramters
 	ClientUserinfoChanged( clientNum );
-	
-	// SooKee add IP address to log
-	// There is a bug in the engine that ocasionally the wrong guid & ip
-	// are present. They can not be trusted until the ClientUserinfoChanged
-	// event that occurs after this function exits.
-	// Hence here I set a flag that the next ClientUserInfoChanged is trustworthy
-	if(firstTime && !isBot)
-		client_userinfo_ready[clientNum] = qtrue;
-//	if(firstTime && !isBot)
-//		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
-//				, clientNum , client->pers.guid, client->pers.ip);
 
 	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 
@@ -2269,6 +2267,9 @@ void ClientDisconnect( int clientNum ) {
 	gentity_t	*ent;
 	int			i;
     char	    userinfo[MAX_INFO_STRING];
+
+    // sookee: tracking reliable ClientConnectInfo
+    client_userinfo_ready[clientNum] = qfalse;
 
 	// cleanup if we are kicking a bot that
 	// hasn't spawned yet
