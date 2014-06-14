@@ -552,7 +552,8 @@ void ClientRespawn( gentity_t *ent ) {
 					LMSpoint();	
                                 //Sago: This is really bad
                                 //TODO: Try not to make people spectators here
-				ent->client->sess.spectatorState = PM_SPECTATOR;
+				// sookee: fox wrong enum type
+				ent->client->sess.spectatorState = SPECTATOR_FOLLOW;
                                 //We have to force spawn imidiantly to prevent lag.
                                 ClientSpawn(ent);
 			}
@@ -1517,9 +1518,6 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// Hence here I set a flag that the next ClientUserInfoChanged is trustworthy
 	if(firstTime && !isBot)
 		client_userinfo_ready[clientNum] = qtrue;
-//	if(firstTime && !isBot)
-//		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
-//				, clientNum , client->pers.guid, client->pers.ip);
 
 	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 
@@ -2199,6 +2197,9 @@ void ClientDisconnect( int clientNum ) {
 
         if ( ent->client->pers.connected == CON_CONNECTED && ent->client->sess.sessionTeam != TEAM_SPECTATOR)
             PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),ent->client->ps);
+
+        // sookee: tracking reliable ClientConnectInfo
+        client_userinfo_ready[clientNum] = qfalse;
 
 	G_LogPrintf( "ClientDisconnect: %i\n", clientNum );
 
