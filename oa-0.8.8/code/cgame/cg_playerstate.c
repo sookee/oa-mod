@@ -317,6 +317,8 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 			trap_S_StartLocalSound( cgs.media.hitSound, CHAN_LOCAL_SOUND );
 		}
 #else
+		health = health; // sookee: fix warning
+		armor = armor; // sookee: fix warning
 		trap_S_StartLocalSound( cgs.media.hitSound, CHAN_LOCAL_SOUND );
 #endif
 	} else if ( ps->persistant[PERS_HITS] < ops->persistant[PERS_HITS] ) {
