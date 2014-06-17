@@ -1148,13 +1148,14 @@ Lots of stuff
 		}
 
 	#ifdef MISSIONPACK
-			//w = CG_Text_Width(s, scale, 0);
-			//CG_Text_Paint(320 - w / 2, 125, scale, colorWhite, st, 0, 0, ITEM_TEXTSTYLE_SHADOWEDMORE);
+		cw = cw;  // sookee fix compiler warning
+		//w = CG_Text_Width(s, scale, 0);
+		//CG_Text_Paint(320 - w / 2, 125, scale, colorWhite, st, 0, 0, ITEM_TEXTSTYLE_SHADOWEDMORE);
 	#else
-                
-                    w = CG_DrawStrlen( st );
-                    CG_DrawStringExt( 320 - w * cw/2, 70, st, colorWhite,
-				qfalse, qtrue, cw, (int)(cw * 1.5), 0 );
+		scale = scale; // sookee fix compiler warning
+		w = CG_DrawStrlen( st );
+		CG_DrawStringExt( 320 - w * cw/2, 70, st, colorWhite,
+		qfalse, qtrue, cw, (int)(cw * 1.5), 0 );
 	#endif
 	}
 /*
@@ -3228,9 +3229,11 @@ static void CG_DrawWarmup( void ) {
 	}
 
 #ifdef MISSIONPACK
+		cw = cw; // sookee: fix compiler warning
 		w = CG_Text_Width(s, scale, 0);
 		CG_Text_Paint(320 - w / 2, 125, scale, colorWhite, s, 0, 0, ITEM_TEXTSTYLE_SHADOWEDMORE);
 #else
+	scale = scale; // sookee: fix compiler warning
 	w = CG_DrawStrlen( s );
 	CG_DrawStringExt( 320 - w * cw/2, 70, s, colorWhite, 
 			qfalse, qtrue, cw, (int)(cw * 1.5), 0 );
