@@ -1586,13 +1586,6 @@ void ClientBegin( int clientNum ) {
     char		userinfo[MAX_INFO_STRING];
     int         i;
     
-    // Write katina stats for each connected player to log
-	for(i=0; i< level.maxclients ; ++i) {
-		ent = g_entities + i;
-        if(ent->inuse && ent->client)
-            katina_write(i, &ent->client->stats); 
-    }
-
     trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
 	ent = g_entities + clientNum;
@@ -1681,6 +1674,14 @@ void ClientBegin( int clientNum ) {
         motd ( ent );
         
 	G_LogPrintf( "ClientBegin: %i\n", clientNum );
+
+	// Write katina stats for each connected player to log
+	for(i=0; i< level.maxclients ; ++i) {
+		ent = g_entities + i;
+        if(ent->inuse && ent->client)
+            katina_write(i, &ent->client->stats);
+    }
+
 
 	//Send domination point names:
 	if(g_gametype.integer == GT_DOMINATION) {
