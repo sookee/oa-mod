@@ -708,11 +708,11 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		DEBUGNAME("EV_JUMP_PAD");
 //		CG_Printf( "EV_JUMP_PAD w/effect #%i\n", es->eventParm );
 		{
-			localEntity_t	*smoke;
+//			localEntity_t	*smoke; // sookee: fix warnings
 			vec3_t			up = {0, 0, 1};
 
-
-			smoke = CG_SmokePuff( cent->lerpOrigin, up, 
+			// sookee: fix warnings
+			/*smoke = */CG_SmokePuff( cent->lerpOrigin, up,
 						  32, 
 						  1, 1, 1, 0.33f,
 						  1000, 
