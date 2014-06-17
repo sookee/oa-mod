@@ -232,7 +232,9 @@ PM_StepSlideMove
 */
 void PM_StepSlideMove( qboolean gravity ) {
 	vec3_t		start_o, start_v;
+#if(0)
 	vec3_t		down_o, down_v;
+#endif
 	trace_t		trace;
 //	float		down_dist, up_dist;
 //	vec3_t		delta, delta2;
@@ -255,10 +257,10 @@ void PM_StepSlideMove( qboolean gravity ) {
 										DotProduct(trace.plane.normal, up) < 0.7)) {
 		return;
 	}
-
+#if(0)
 	VectorCopy (pm->ps->origin, down_o);
 	VectorCopy (pm->ps->velocity, down_v);
-
+#endif
 	VectorCopy (start_o, up);
 	up[2] += STEPSIZE;
 
