@@ -635,7 +635,8 @@ void ClientRespawn( gentity_t *ent ) {
 					LMSpoint();	
                                 //Sago: This is really bad
                                 //TODO: Try not to make people spectators here
-				ent->client->sess.spectatorState = PM_SPECTATOR;
+				// sookee: fox wrong enum type
+				ent->client->sess.spectatorState = SPECTATOR_FOLLOW;
                                 //We have to force spawn imidiantly to prevent lag.
                                 ClientSpawn(ent);
 			}
@@ -1480,15 +1481,6 @@ Sago: I am not happy with this exception
 
 	trap_SetConfigstring( CS_PLAYERS+clientNum, s );
 
-	// sookee: do this here in ClientConnect guid & ip are sometimes
-	// not correct
-	if(client_userinfo_ready[clientNum] == qtrue)
-	{
-		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
-				, clientNum , client->pers.guid, client->pers.ip);
-		client_userinfo_ready[clientNum] = qfalse;
-	}
-
 	// this is not the userinfo, more like the configstring actually
 	G_LogPrintf( "ClientUserinfoChanged: %i %s\\id\\%s\n", clientNum, s, Info_ValueForKey(userinfo, "cl_guid") );
 }
@@ -1582,6 +1574,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		    
 	}
 
+
 	// if a player reconnects quickly after a disconnect, the client disconnect may never be called, thus flag can get lost in the ether
 	if (ent->inuse) {
 		G_LogPrintf("Forcing disconnect on active client: %i\n", clientNum);
@@ -1630,7 +1623,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	//KK-OAX Swapped these in order...seemed to help the connection process.
 	// get and distribute relevent paramters
 	ClientUserinfoChanged( clientNum );
-	
+
 	// SooKee add IP address to log
 	// There is a bug in the engine that ocasionally the wrong guid & ip
 	// are present. They can not be trusted until the ClientUserinfoChanged
@@ -1638,9 +1631,6 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// Hence here I set a flag that the next ClientUserInfoChanged is trustworthy
 	if(firstTime && !isBot)
 		client_userinfo_ready[clientNum] = qtrue;
-//	if(firstTime && !isBot)
-//		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
-//				, clientNum , client->pers.guid, client->pers.ip);
 
 	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 
@@ -1722,14 +1712,6 @@ void ClientBegin( int clientNum ) {
     char		userinfo[MAX_INFO_STRING];
     int         i;
     
-    // Write katina stats for each connected player to log
-	//we want to do this to have fresh stats for every team constellation and balancers/unbalancers!
-	for(i=0; i< level.maxclients ; ++i) {
-		ent = g_entities + i;
-		if(ent->inuse && ent->client)
-		    katina_write(i, &ent->client->stats); 
-	}
-
     trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
 	ent = g_entities + clientNum;
@@ -1818,6 +1800,22 @@ void ClientBegin( int clientNum ) {
         motd ( ent );
         
 	G_LogPrintf( "ClientBegin: %i\n", clientNum );
+	// sookee: do this here because in ClientConnect guid & ip are sometimes
+	// not correct
+	if(client_userinfo_ready[clientNum] == qtrue)
+	{
+		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
+				, clientNum , client->pers.guid, client->pers.ip);
+		client_userinfo_ready[clientNum] = qfalse;
+	}
+
+	// Write katina stats for each connected player to log
+	for(i=0; i< level.maxclients ; ++i) {
+		ent = g_entities + i;
+        if(ent->inuse && ent->client)
+            katina_write(i, &ent->client->stats);
+    }
+
 
 	//Send domination point names:
 	if(g_gametype.integer == GT_DOMINATION) {
@@ -2347,6 +2345,9 @@ void ClientDisconnect( int clientNum ) {
 
         if ( ent->client->pers.connected == CON_CONNECTED && ent->client->sess.sessionTeam != TEAM_SPECTATOR)
             PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),ent->client->ps);
+
+        // sookee: tracking reliable ClientConnectInfo
+        client_userinfo_ready[clientNum] = qfalse;
 
 	G_LogPrintf( "ClientDisconnect: %i\n", clientNum );
 
