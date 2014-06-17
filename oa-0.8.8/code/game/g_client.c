@@ -1384,15 +1384,6 @@ Sago: I am not happy with this exception
 
 	trap_SetConfigstring( CS_PLAYERS+clientNum, s );
 
-	// sookee: do this here in ClientConnect guid & ip are sometimes
-	// not correct
-	if(client_userinfo_ready[clientNum] == qtrue)
-	{
-		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
-				, clientNum , client->pers.guid, client->pers.ip);
-		client_userinfo_ready[clientNum] = qfalse;
-	}
-
 	// this is not the userinfo, more like the configstring actually
 	G_LogPrintf( "ClientUserinfoChanged: %i %s\\id\\%s\n", clientNum, s, Info_ValueForKey(userinfo, "cl_guid") );
 }
@@ -1686,6 +1677,14 @@ void ClientBegin( int clientNum ) {
         motd ( ent );
         
 	G_LogPrintf( "ClientBegin: %i\n", clientNum );
+	// sookee: do this here because in ClientConnect guid & ip are sometimes
+	// not correct
+	if(client_userinfo_ready[clientNum] == qtrue)
+	{
+		G_LogPrintf( "ClientConnectInfo: %i %s %s\n"
+				, clientNum , client->pers.guid, client->pers.ip);
+		client_userinfo_ready[clientNum] = qfalse;
+	}
 
 	//Send domination point names:
 	if(g_gametype.integer == GT_DOMINATION) {
