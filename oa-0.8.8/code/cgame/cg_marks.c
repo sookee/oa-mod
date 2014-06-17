@@ -1091,9 +1091,9 @@ void CG_AddParticles (void)
 	float			alpha;
 	float			time, time2;
 	vec3_t			org;
-	int				color;
+//	int				color; // sookee: fix warnings (set not used)
 	cparticle_t		*active, *tail;
-	int				type;
+//	int				type; // sookee: fix warnings (set not used)
 	vec3_t			rotate_ang;
 
 	if (!initparticles)
@@ -1198,7 +1198,7 @@ void CG_AddParticles (void)
 		if (alpha > 1.0)
 			alpha = 1;
 
-		color = p->color;
+		//color = p->color; // sookee: fix warnings (never used)
 
 		time2 = time*time;
 
@@ -1206,7 +1206,7 @@ void CG_AddParticles (void)
 		org[1] = p->org[1] + p->vel[1]*time + p->accel[1]*time2;
 		org[2] = p->org[2] + p->vel[2]*time + p->accel[2]*time2;
 
-		type = p->type;
+		//type = p->type; // sookee: fix warnings (never used)
 
 		CG_AddParticleToScene (p, org, alpha);
 	}
