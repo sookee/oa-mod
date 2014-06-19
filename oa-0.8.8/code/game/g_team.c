@@ -1044,7 +1044,7 @@ void Team_DroppedFlagThink(gentity_t *ent) {
 	}
 	
 	PrintMsg(NULL, "The %s flag has returned!\n", TeamName(team));
-	G_LogPrintf("CTF: %i %i %i: %s flag returned after timeout\n", -1, team, 3, TeamName(team));
+	G_LogPrintf("CTF: 1022 %i %i: %s flag returned after timeout\n", team, 3, TeamName(team));
 
 	Team_ReturnFlagSound( Team_ResetFlag( team ), team );
 	// Reset Flag will delete this entity
