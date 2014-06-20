@@ -540,37 +540,27 @@ qboolean BG_ClientListTest(const char* ignoreList, int pid) // sookee
 {
 	int i;
 	for(i = 0; i < MAX_CLIENTS; ++i)
-	{
-		if(ignoreList[i] < 0)
-			continue;
 		if(ignoreList[i] == pid)
 			return qtrue;
-	}
 	return qfalse;
 }
 
 void BG_ClientListAdd(char* ignoreList, int pid) // sookee
 {
 	int i;
-	for(i = 0; i < MAX_CLIENTS; ++i)
-	{
-		if(ignoreList[i] >= 0)
-			continue;
+	for(i = 0; i < MAX_CLIENTS && ignoreList[i] >= 0; ++i) {}
+
+	if(i < MAX_CLIENTS)
 		ignoreList[i] = pid;
-		return;
-	}
 }
 
 void BG_ClientListRemove(char* ignoreList, int pid) // sookee
 {
 	int i;
-	for(i = 0; i < MAX_CLIENTS; ++i)
-	{
-		if(ignoreList[i] != pid)
-			continue;
+	for(i = 0; i < MAX_CLIENTS && ignoreList[i] != pid; ++i) {}
+
+	if(i < MAX_CLIENTS)
 		ignoreList[i] = (char) -1;
-		return;
-	}
 }
 
 /*
