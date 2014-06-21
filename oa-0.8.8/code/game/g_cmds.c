@@ -1107,12 +1107,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		return;
 	}
 
-	// sookee: /ignore
-	if ( BG_ClientListTest(other->client->pers.ignoreList, ent - g_entities) ) {
-		return;
-	}
-
-	if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
+        if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
 
 	// no chatting to players in tournements
 	if ( (g_gametype.integer == GT_TOURNAMENT )
@@ -1294,11 +1289,6 @@ static void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *i
 	}
 	// no chatting to players in tournements
 	if ( (g_gametype.integer == GT_TOURNAMENT )) {
-		return;
-	}
-
-	// sookee: /ignore
-	if ( BG_ClientListTest(other->client->pers.ignoreList, ent - g_entities) ) {
 		return;
 	}
 
