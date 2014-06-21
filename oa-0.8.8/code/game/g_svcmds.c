@@ -491,7 +491,7 @@ struct
   { "removeip", qfalse, Svcmd_RemoveIP_f },
   
   // sookee
-  { "splay", CMD_MESSAGE|CMD_INTERMISSION, Svcmd_SoundPlay_f },
+  { "splay", qfalse, Svcmd_SoundPlay_f },
 
   //KK-OAX Uses wrapper in g_svccmds_ext.c
   { "listip", qfalse, Svcmd_ListIP_f }, 

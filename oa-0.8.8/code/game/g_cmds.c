@@ -696,7 +696,6 @@ void BroadcastTeamChange( gclient_t *client, int oldTeam )
 	}
 }
 
-
 /*
 =================
 SetTeam
@@ -749,42 +748,42 @@ void SetTeam( gentity_t *ent, char *s ) {
 			// pick the team with the least number of players
 			team = PickTeam( clientNum );
 		}
-		if ( !force ) {
-			    if ( g_teamForceBalance.integer  ) {
-				    int		counts[TEAM_NUM_TEAMS];
+        if ( !force ) {
+		    if ( g_teamForceBalance.integer  ) {
+			    int		counts[TEAM_NUM_TEAMS];
 
-				    counts[TEAM_BLUE] = TeamCount( ent->client->ps.clientNum, TEAM_BLUE );
-				    counts[TEAM_RED] = TeamCount( ent->client->ps.clientNum, TEAM_RED );
+			    counts[TEAM_BLUE] = TeamCount( ent->client->ps.clientNum, TEAM_BLUE );
+			    counts[TEAM_RED] = TeamCount( ent->client->ps.clientNum, TEAM_RED );
 
-				    // We allow a spread of two
-				    if ( team == TEAM_RED && counts[TEAM_RED] - counts[TEAM_BLUE] > 1 ) {
-					    trap_SendServerCommand( ent->client->ps.clientNum, 
-						    "cp \"Red team has too many players.\n\"" );
-					    return; // ignore the request
-				    }
-				    if ( team == TEAM_BLUE && counts[TEAM_BLUE] - counts[TEAM_RED] > 1 ) {
-					    trap_SendServerCommand( ent->client->ps.clientNum, 
-						    "cp \"Blue team has too many players.\n\"" );
-					    return; // ignore the request
-				    }
-
-				    // It's ok, the team we are switching to has less or same number of players
+			    // We allow a spread of two
+			    if ( team == TEAM_RED && counts[TEAM_RED] - counts[TEAM_BLUE] > 1 ) {
+				    trap_SendServerCommand( ent->client->ps.clientNum, 
+					    "cp \"Red team has too many players.\n\"" );
+				    return; // ignore the request
 			    }
-		}
+			    if ( team == TEAM_BLUE && counts[TEAM_BLUE] - counts[TEAM_RED] > 1 ) {
+				    trap_SendServerCommand( ent->client->ps.clientNum, 
+					    "cp \"Blue team has too many players.\n\"" );
+				    return; // ignore the request
+			    }
+
+			    // It's ok, the team we are switching to has less or same number of players
+		    }
+        }
 	} else {
 		// force them to spectators if there aren't any spots free
 		team = TEAM_FREE;
 	}
-		if ( !force ) {
-		    // override decision if limiting the players
-		    if ( (g_gametype.integer == GT_TOURNAMENT)
-			    && level.numNonSpectatorClients >= 2 ) {
-				    team = TEAM_SPECTATOR;
-		    } else if ( g_maxGameClients.integer > 0 && 
-			    level.numNonSpectatorClients >= g_maxGameClients.integer ) {
-				    team = TEAM_SPECTATOR;
-		    }
-		}
+    if ( !force ) {
+	    // override decision if limiting the players
+	    if ( (g_gametype.integer == GT_TOURNAMENT)
+		    && level.numNonSpectatorClients >= 2 ) {
+		    team = TEAM_SPECTATOR;
+	    } else if ( g_maxGameClients.integer > 0 && 
+		    level.numNonSpectatorClients >= g_maxGameClients.integer ) {
+		    team = TEAM_SPECTATOR;
+	    }
+	}
 
 	//
 	// decide if we will allow the change
@@ -831,14 +830,14 @@ void SetTeam( gentity_t *ent, char *s ) {
 		ent->flags &= ~FL_GODMODE;
 		ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
 		player_die (ent, ent, ent, 100000, MOD_SUICIDE);
-                if(teamscore != -99) {
-			level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
-		}
-		if ( client ) {
-			PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),client->ps);
-		}
+                if(teamscore != -99)
+                    level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
+
 	}
 
+        if(oldTeam!=TEAM_SPECTATOR)
+            PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),client->ps);
+        
 	// they go to the end of the line for tournements
         if(team == TEAM_SPECTATOR && oldTeam != team)
                 AddTournamentQueue(client);
@@ -902,10 +901,9 @@ void Cmd_Team_f( gentity_t *ent ) {
 	int			oldTeam;
 	char		s[MAX_TOKEN_CHARS];
 	qboolean    force;
-		
-	oldTeam = ent->client->sess.sessionTeam;
 
 	if ( trap_Argc() != 2 ) {
+		oldTeam = ent->client->sess.sessionTeam;
 		switch ( oldTeam ) {
 		case TEAM_BLUE:
 			trap_SendServerCommand( ent-g_entities, "print \"Blue team\n\"" );
@@ -925,35 +923,10 @@ void Cmd_Team_f( gentity_t *ent ) {
     
     force = G_admin_permission(ent, ADMF_FORCETEAMCHANGE);
 	
-	trap_Argv( 1, s, sizeof( s ) );
-
-	//only allow real team switches and do not increase wait-time for missclicking on the same team
-	if ( ((oldTeam==TEAM_BLUE) && (Q_strequal( s , "blue" ) || Q_strequal( s , "b" ))) || 
-		((oldTeam==TEAM_RED) && (Q_strequal( s , "red" ) || Q_strequal( s , "r" ))) || 
-		((oldTeam==TEAM_SPECTATOR) && (Q_strequal( s , "spectator") || Q_strequal( s , "s" )))) {
-			switch ( oldTeam ) {
-			case TEAM_BLUE:
-				trap_SendServerCommand( ent-g_entities, "print \"You are already in the Blue Team.\n\"" );
-				break;
-			case TEAM_RED:
-				trap_SendServerCommand( ent-g_entities, "print \"You are already in the Red team.\n\"" );
-				break;
-			default:
-				trap_SendServerCommand( ent-g_entities, "print \"You are already in Spectator Mode.\n\"" );
-				SetTeam( ent, s );
-			}
-	} else {
-		if( !force ) {
-			if ( ent->client->switchTeamTime > level.time ) {
-				trap_SendServerCommand( ent-g_entities, "print \"May not switch teams more than once per 5 seconds.\n\"" );
-				return;
-			} else {
-				SetTeam( ent, s );
-				ent->client->switchTeamTime = level.time + 5000;
-			}
-		} else {
-			SetTeam( ent, s );
-			ent->client->switchTeamTime = level.time + 5000;
+	if( !force ) {
+	    if ( ent->client->switchTeamTime > level.time ) {
+		    trap_SendServerCommand( ent-g_entities, "print \"May not switch teams more than once per 5 seconds.\n\"" );
+		    return;
 		}
 	}
 
@@ -962,6 +935,12 @@ void Cmd_Team_f( gentity_t *ent ) {
 		&& ent->client->sess.sessionTeam == TEAM_FREE ) {
 		ent->client->sess.losses++;
 	}
+
+	trap_Argv( 1, s, sizeof( s ) );
+
+	SetTeam( ent, s );
+
+	ent->client->switchTeamTime = level.time + 5000;
 }
 
 
@@ -1112,8 +1091,6 @@ G_Say
 */
 
 static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char *name, const char *message ) {
-	int a;
-
 	if (!other) {
 		return;
 	}
@@ -1138,8 +1115,6 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		&& ent->client->sess.sessionTeam != TEAM_FREE ) {
 		return;
 	}
-
-	a = level.time;
 
 	trap_SendServerCommand( other-g_entities, va("%s \"%s%c%c%s\"", 
 		mode == SAY_TEAM ? "tchat" : "chat",
@@ -1549,35 +1524,6 @@ void Cmd_GameCommand_f( gentity_t *ent ) {
 	G_Say( ent, ent, SAY_TELL, gc_orders[order] );
 }
 
-void Cmd_GetMySpeed_f( gentity_t *ent ) 
-{
-	if ( ent->client ) {
-		if ( ( g_gametype.integer == GT_CTF ) || ( g_gametype.integer == GT_CTF_ELIMINATION ) ) {
-			trap_SendServerCommand( ent-g_entities, va("print \"You ran %iu in %is without and %is in %is with the flag.\n\"", 
-				ent->client->stats.distanceRan, ent->client->stats.distanceCount , ent->client->stats.distanceRanWithFlag, ent->client->stats.distanceCountFlag) );
-		} else {
-			trap_SendServerCommand( ent-g_entities, va("print \"You ran %iu in %is.\n\"", ent->client->stats.distanceRan , ent->client->stats.distanceCount) );
-		}
-	}
-}
-
-void Cmd_SetSpectSpeed_f( gentity_t *ent ) 
-{
-	int		speed;
-	char	str[MAX_TOKEN_CHARS];
-
-	trap_Argv( 1, str, sizeof( str ) );
-	speed = atoi( str );
-	
-	//G_Say( ent, ent, SAY_TELL, gc_orders[order] );
-	if ( speed > 0 ) {
-		ent->client->pers.sv_spectatorSpeed = speed;
-	} else {
-		ent->client->pers.sv_spectatorSpeed = 400;
-	}
-	
-}
-
 /*
 ==================
 Cmd_Where_f
@@ -1616,7 +1562,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	char	arg1[MAX_STRING_TOKENS];
 	char	arg2[MAX_STRING_TOKENS];
         char    buffer[256];
-	int doesRestart=0;
 
 	if ( !g_allowVote.integer ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Voting not allowed here.\n\"" );
@@ -1631,7 +1576,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		trap_SendServerCommand( ent-g_entities, "print \"You have called the maximum number of votes.\n\"" );
 		return;
 	}
-	if ( (ent->client->sess.sessionTeam == TEAM_SPECTATOR)  && (g_allowSpectatorVote.integer==0) ) {
+	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Not allowed to call a vote as spectator.\n\"" );
 		return;
 	}
@@ -1654,22 +1599,16 @@ void Cmd_CallVote_f( gentity_t *ent ) {
         
 
 	if ( !Q_stricmp( arg1, "map_restart" ) ) {
-		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "nextmap" ) ) {
-		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "map" ) ) {
-		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "g_gametype" ) ) {
-		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "kick" ) ) {
 	} else if ( !Q_stricmp( arg1, "clientkick" ) ) {
 	} else if ( !Q_stricmp( arg1, "g_doWarmup" ) ) {
 	} else if ( !Q_stricmp( arg1, "timelimit" ) ) {
 	} else if ( !Q_stricmp( arg1, "fraglimit" ) ) {
         } else if ( !Q_stricmp( arg1, "custom" ) ) {
-		//doesRestart=?;
         } else if ( !Q_stricmp( arg1, "shuffle" ) ) {
-		doesRestart=1;
 	} else {
 		trap_SendServerCommand( ent-g_entities, "print \"Invalid vote string.\n\"" );
 		//trap_SendServerCommand( ent-g_entities, "print \"Vote commands are: map_restart, nextmap, map <mapname>, g_gametype <n>, kick <player>, clientkick <clientnum>, g_doWarmup, timelimit <time>, fraglimit <frags>.\n\"" );
@@ -1914,7 +1853,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	}
 
         ent->client->pers.voteCount++;
-	level.isVoteWithRestart = doesRestart;
 	trap_SendServerCommand( -1, va("print \"%s called a vote.\n\"", ent->client->pers.netname ) );
 
 	// sookee: added callvote to log file
@@ -1927,11 +1865,9 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	level.voteNo = 0;
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
-		//set 'has voted' flag to 0
 		level.clients[i].ps.eFlags &= ~EF_VOTED;
                 level.clients[i].vote = 0;
 	}
-	//caller has voted
 	ent->client->ps.eFlags |= EF_VOTED;
         ent->client->vote = 1;
         //Do a first count to make sure that numvotingclients is correct!
@@ -1955,15 +1891,13 @@ void Cmd_Vote_f( gentity_t *ent ) {
 		trap_SendServerCommand( ent-g_entities, "print \"No vote in progress.\n\"" );
 		return;
 	}
-	if ( ent->client->ps.eFlags & EF_VOTED ) {
+	/*if ( ent->client->ps.eFlags & EF_VOTED ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Vote already cast.\n\"" );
 		return;
-	}
+	}*/
 	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
-		if ( g_allowSpectatorVote.integer == 0 ) {
-			trap_SendServerCommand( ent-g_entities, "print \"Not allowed to vote as spectator.\n\"" );
-			return;
-		} 
+		trap_SendServerCommand( ent-g_entities, "print \"Not allowed to vote as spectator.\n\"" );
+		return;
 	}
 
 	trap_SendServerCommand( ent-g_entities, "print \"Vote cast.\n\"" );
@@ -2232,8 +2166,6 @@ void Cmd_GetMappage_f( gentity_t *ent ) {
 //KK-OAX This is the table that ClientCommands runs the console entry against. 
 commands_t cmds[ ] = 
 {
-	/* Format: {Name,Flag,Handler} */
-
   // normal commands
   { "team", 0, Cmd_Team_f },
   { "vote", 0, Cmd_Vote_f },
@@ -2262,7 +2194,6 @@ commands_t cmds[ ] =
 
   { "score", CMD_INTERMISSION, Cmd_Score_f },
   { "acc", CMD_INTERMISSION, Cmd_Acc_f},
-  { "accnow", 0 , Cmd_Acc_f},
 
   // cheats
   { "give", CMD_CHEAT|CMD_LIVING, Cmd_Give_f },
@@ -2277,7 +2208,7 @@ commands_t cmds[ ] =
 
   // game commands
 
-  { "follow", CMD_NOTEAM, Cmd_Follow_f }, //XXX info to player that he needs to specify who to follow with a number
+  { "follow", CMD_NOTEAM, Cmd_Follow_f },
   { "follownext", CMD_NOTEAM, Cmd_FollowCycle_f },
   { "followprev", CMD_NOTEAM, Cmd_FollowCycle_f },
 
@@ -2286,10 +2217,7 @@ commands_t cmds[ ] =
   //KK-OAX
   { "freespectator", CMD_NOTEAM, StopFollowing },
   { "getmappage", 0, Cmd_GetMappage_f },
-  { "gc", 0, Cmd_GameCommand_f },
-
-	{ "spectatorSpeed", 0 , Cmd_SetSpectSpeed_f },
-	{ "myspeed", 0 , Cmd_GetMySpeed_f }
+  { "gc", 0, Cmd_GameCommand_f }
   
 };
 
@@ -2310,7 +2238,6 @@ void ClientCommand( int clientNum )
     int       i;
 
     ent = g_entities + clientNum;
-	ent->client->lastActive = level.time +1000;
     if( !ent->client )
         return;   // not fully in game yet
 

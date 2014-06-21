@@ -217,11 +217,15 @@ void Svcmd_Chat_f( void )
 }
 
 // sookee: console tell
+#define MAX_MSG_LINES 32
 void Svcmd_MsgTo_f( void )
 {
 	char cmd[12];
 	char arg1[6];
 	int clientNum;
+	int i, j;
+	char* lines;
+	char* line[MAX_MSG_LINES];
 
 	trap_Argv(0, cmd, sizeof(cmd));
 
@@ -241,16 +245,36 @@ void Svcmd_MsgTo_f( void )
 		return;
 	}
 
+	// multiline msgs with escaped newlines "\\n"
+	lines = ConcatArgs(2);
+
+	line[0] = lines;
+	for(j = 1, i = 0; j < MAX_MSG_LINES && i < (MAX_STRING_CHARS - 2) && lines[i]; ++i)
+	{
+		if(!Q_strncmp(lines + i, "\\n", 2))
+		{
+			*(lines + i) = 0;
+			line[j++] = lines + i + 2;
+			++i;
+		}
+	}
+
 	if(clientNum == -1) // send to all clients
 	{
 		for(clientNum = 0; clientNum < MAX_CLIENTS; ++clientNum)
 		{
-			if(level.gentities[clientNum].client)
+			if(!level.gentities[clientNum].client)
+				continue;
+
+			if(Q_stricmpn(cmd, "msg_to", sizeof(cmd)))
 			{
-				if(Q_stricmpn(cmd, "msg_to", sizeof(cmd)))
-					trap_SendServerCommand(clientNum, va( "chat \"%s\"", ConcatArgs(2)));
-				else
-					trap_SendServerCommand(clientNum, va( "print \"%s\n\"", ConcatArgs(2)));
+				for(i = 0; i < j; ++i)
+					trap_SendServerCommand(clientNum, va( "chat \"%s\"", line[i]));
+			}
+			else
+			{
+				for(i = 0; i < j; ++i)
+					trap_SendServerCommand(clientNum, va( "print \"%s\n\"", line[i]));
 			}
 		}
 	}
@@ -263,19 +287,23 @@ void Svcmd_MsgTo_f( void )
 		}
 
 		if(Q_stricmpn(cmd, "msg_to", sizeof(cmd)))
-			trap_SendServerCommand(clientNum, va( "chat \"%s\"", ConcatArgs(2)));
+		{
+			for(i = 0; i < j; ++i)
+				trap_SendServerCommand(clientNum, va( "chat \"%s\"", line[i]));
+		}
 		else
-			trap_SendServerCommand(clientNum, va( "print \"%s\n\"", ConcatArgs(2)));
+		{
+			for(i = 0; i < j; ++i)
+				trap_SendServerCommand(clientNum, va( "print \"%s\n\"", line[i]));
+		}
 	}
 }
 
 // sookee:
-// plays sounds on the vpath /splay/name.wav
+// plays arbitrary sound on the vpath
 void Svcmd_SoundPlay_f( void )
 {
-	int num;
 	char name[MAX_OSPATH];
-	int soundIndex;
 
 	if(trap_Argc() < 1 )
 	{
@@ -284,30 +312,9 @@ void Svcmd_SoundPlay_f( void )
 	}
 
 	trap_Argv(1, name, sizeof(name));
-	for(num = 0; num < level.maxclients; ++num)
-		if(level.gentities[num].client)
-		{
-//			if((soundIndex = G_SoundIndex(va("sound/world/%s", name))))
-			if((soundIndex = G_FindConfigstringIndex(va("%s", name), CS_SOUNDS, MAX_SOUNDS, qfalse)))
-				G_Sound(level.gentities + num, CHAN_AUTO, soundIndex);
-		}
-			//G_Sound(level.gentities + num, CHAN_AUTO, G_SoundIndex("sound/world/jumppad.wav"));
-}
 
-//void G_SplayListSounds(int clientNum, int start, int max, qboolean create)
-//{
-//	int		i;
-//	char	s[MAX_STRING_CHARS];
-//
-//	for(i = 1; i < MAX_SOUNDS; ++i)
-//	{
-//		trap_GetConfigstring(CS_SOUNDS + i, s, sizeof(s));
-//
-//		if( !s[0])
-//			break;
-//		trap_SendServerCommand(clientNum, va("print \"%s\n\"", s));
-//	}
-//}
+    G_GlobalSound(G_SoundIndex(name));
+}
 
 /*
 =============

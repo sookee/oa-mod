@@ -74,42 +74,6 @@ typedef enum {
 typedef struct gentity_s gentity_t;
 typedef struct gclient_s gclient_t;
 
-
-#define SPAWNKILL_TIME 500  // in msecs
-
-typedef struct
-{
-    // KLT_WEAPON_USAGE
-    int numShots[WP_NUM_WEAPONS];
-
-    // KLT_MOD_DAMAGE
-    int numHits[MOD_NUM_DAMAGETYPES];
-    int numHitsRecv[MOD_NUM_DAMAGETYPES];
-    int damageDone[MOD_NUM_DAMAGETYPES];
-    int damageRecv[MOD_NUM_DAMAGETYPES];
-    float weightedHits[MOD_NUM_DAMAGETYPES];
-
-    // KLT_CLIENT_INFO
-    int fragsFace;          // frags done to enemy face
-    int fragsBack;          // frags done to enemy back
-    int fraggedInFace;      // fragged from the front
-    int fraggedInBack;      // fragged from the back
-    int spawnKillsDone;
-    int spawnKillsRecv;
-    int pushesDone;
-    int pushesRecv;
-    int healthPickedUp;
-    int armorPickedUp;
-    int holyShitFrags;      // I fragged the carrier right before he scores
-    int holyShitFragged;    // I got fragged right before i could score
-	
-	unsigned int distanceRan;
-	unsigned int distanceRanWithFlag;
-        int distanceCount;
-        int distanceCountFlag;
-
-} stats_t;
-
 struct gentity_s {
 	entityState_t	s;				// communicated by server to clients
 	entityShared_t	r;				// shared by both the server system and game
@@ -306,7 +270,6 @@ typedef struct {
 	int			delag;
 //	int			debugDelag;
 	int			cmdTimeNudge;
-	int 			sv_spectatorSpeed;
 //unlagged - client options
 //unlagged - lag simulation #2
 /*	int			latentSnaps;
@@ -366,7 +329,7 @@ struct gclient_s {
 	// the rest of the structure is private to game
 	clientPersistant_t	pers;
 	clientSession_t		sess;
-	
+
 	qboolean	readyToExit;		// wishes to leave the intermission
 
 	qboolean	noclip;
@@ -401,7 +364,7 @@ struct gclient_s {
 
 	// timers
 	int			respawnTime;		// can respawn when time > this, force after g_forcerespwan
-	int			lastActive;		// kick players when last Active time > g_inactivity
+	int			inactivityTime;		// kick players when time > this
 	qboolean	inactivityWarning;	// qtrue if the five seoond warning has been given
 	int			rewardTime;			// clear the EF_AWARD_IMPRESSIVE, etc when time > this
 
@@ -458,10 +421,6 @@ struct gclient_s {
         qboolean        spawnprotected;
 
         int			accuracy[WP_NUM_WEAPONS][2];
-		
-	int spawnTime;          // level.time in msec of last spawn
-		
-	stats_t stats;
 };
 
 
@@ -512,7 +471,6 @@ typedef struct {
 	// voting state
 	char		voteString[MAX_STRING_CHARS];
 	char		voteDisplayString[MAX_STRING_CHARS];
-	int			isVoteWithRestart;		//does the vote need a map/client restart?
 	int			voteTime;				// level.time vote was called
 	int			voteExecuteTime;		// time the vote is executed
 	int			voteYes;
@@ -824,7 +782,6 @@ void player_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 void AddScore( gentity_t *ent, vec3_t origin, int score );
 void CalculateRanks( void );
 qboolean SpotWouldTelefrag( gentity_t *spot );
-void katina_write(int clientNum, stats_t* stats);
 
 //
 // g_svcmds.c
@@ -1058,7 +1015,6 @@ extern	vmCvar_t	g_quadfactor;
 extern	vmCvar_t	g_forcerespawn;
 extern	vmCvar_t	g_respawntime;
 extern	vmCvar_t	g_inactivity;
-extern	vmCvar_t	g_inactivityToSpect;
 extern	vmCvar_t	g_debugMove;
 extern	vmCvar_t	g_debugAlloc;
 extern	vmCvar_t	g_debugDamage;
@@ -1073,7 +1029,6 @@ extern	vmCvar_t	g_warmup;
 extern	vmCvar_t	g_doWarmup;
 extern	vmCvar_t	g_blood;
 extern	vmCvar_t	g_allowVote;
-extern	vmCvar_t	g_allowSpectatorVote;
 extern	vmCvar_t	g_teamAutoJoin;
 extern	vmCvar_t	g_teamForceBalance;
 extern	vmCvar_t	g_banIPs;
