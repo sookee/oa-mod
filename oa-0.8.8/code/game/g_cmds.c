@@ -1112,8 +1112,6 @@ G_Say
 */
 
 static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char *name, const char *message ) {
-	int a;
-
 	if (!other) {
 		return;
 	}
@@ -1130,12 +1128,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		return;
 	}
 
-	// sookee: /ignore
-	if ( BG_ClientListTest(other->client->pers.ignoreList, ent - g_entities) ) {
-		return;
-	}
-
-	if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
+        if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
 
 	// no chatting to players in tournements
 	if ( (g_gametype.integer == GT_TOURNAMENT )
@@ -1144,7 +1137,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		return;
 	}
 
-	a = level.time;
+	int a = level.time;
 
 	trap_SendServerCommand( other-g_entities, va("%s \"%s%c%c%s\"", 
 		mode == SAY_TEAM ? "tchat" : "chat",
@@ -1319,11 +1312,6 @@ static void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *i
 	}
 	// no chatting to players in tournements
 	if ( (g_gametype.integer == GT_TOURNAMENT )) {
-		return;
-	}
-
-	// sookee: /ignore
-	if ( BG_ClientListTest(other->client->pers.ignoreList, ent - g_entities) ) {
 		return;
 	}
 
@@ -1928,8 +1916,8 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	trap_SendServerCommand( -1, va("print \"%s called a vote.\n\"", ent->client->pers.netname ) );
 
 	// sookee: added callvote to log file
-	G_LogPrintf("Callvote: %i %s %s: %s has called a vote for '%s %s'\n", ent-g_entities, arg1, arg2
-			, ent->client->pers.netname, arg1, arg2);
+	G_LogPrintf("Callvote: %i %s: %s has called a vote for '%s'\n", ent-g_entities, arg1
+			, ent->client->pers.netname, arg1);
 
 	// start the voting, the caller autoamtically votes yes
 	level.voteTime = level.time;
@@ -2247,8 +2235,8 @@ commands_t cmds[ ] =
   // normal commands
   { "team", 0, Cmd_Team_f },
   { "vote", 0, Cmd_Vote_f },
-  { "ignore", 0, Cmd_Ignore_f }, // sookee: uncommented this feature
-  { "unignore", 0, Cmd_Ignore_f },
+  /*{ "ignore", 0, Cmd_Ignore_f },
+  { "unignore", 0, Cmd_Ignore_f },*/
 
   // communication commands
   { "tell", CMD_MESSAGE, Cmd_Tell_f },

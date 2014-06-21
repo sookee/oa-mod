@@ -477,8 +477,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	int			i,counter2;
 	char		*killerName, *obit;
 
-	// sookee: add check
-	if ( !self->client || self->client->ps.pm_type == PM_DEAD ) {
+	if ( self->client->ps.pm_type == PM_DEAD ) {
 		return;
 	}
 
@@ -1040,7 +1039,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	int			asave;
 	int			knockback;
 	int			max;
-    int i;
         
 	vec3_t		bouncedir, impactpoint;
     
@@ -1172,6 +1170,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
                 		, attacker->client->ps.clientNum, targ->client->ps.clientNum
                 		, attacker->client->pers.netname, targ->client->pers.netname);
 
+                int i;
                 for(i = 0; i < level.maxclients; ++i)
                 	if(level.gentities[0].client)
                 		trap_SendServerCommand(i, va( "print \"%s^7 was ^3pushed ^7by %s\n\""
