@@ -536,6 +536,32 @@ void Cmd_AdminMessage_f( gentity_t *ent )
   G_AdminMessage( prefix, "%s", msg );
 }
 
+qboolean BG_ClientListTest(const char* ignoreList, int pid) // sookee
+{
+	int i;
+	for(i = 0; i < MAX_CLIENTS; ++i)
+		if(ignoreList[i] == pid)
+			return qtrue;
+	return qfalse;
+}
+
+void BG_ClientListAdd(char* ignoreList, int pid) // sookee
+{
+	int i;
+	for(i = 0; i < MAX_CLIENTS && ignoreList[i] >= 0; ++i) {}
+
+	if(i < MAX_CLIENTS)
+		ignoreList[i] = pid;
+}
+
+void BG_ClientListRemove(char* ignoreList, int pid) // sookee
+{
+	int i;
+	for(i = 0; i < MAX_CLIENTS && ignoreList[i] != pid; ++i) {}
+
+	if(i < MAX_CLIENTS)
+		ignoreList[i] = (char) -1;
+}
 
 /*
 ==============
@@ -544,7 +570,7 @@ KK-OAX Removed Static to Keep in Mod Files
 Currently Unused until I figure out how to implement it with voice chats. 
 ==============
 */
-/*void Cmd_Ignore_f( gentity_t *ent )
+void Cmd_Ignore_f( gentity_t *ent ) // sookee: uncommented feature
 {
   int pids[ MAX_CLIENTS ];
   char name[ MAX_NAME_LENGTH ];
@@ -577,9 +603,9 @@ Currently Unused until I figure out how to implement it with voice chats.
   {
     if( ignore )
     {
-      if( !BG_ClientListTest( &ent->client->pers.ignoreList, pids[ i ] ) )
+      if( !BG_ClientListTest( ent->client->pers.ignoreList, pids[ i ] ) )
       {
-        BG_ClientListAdd( &ent->client->pers.ignoreList, pids[ i ] );
+        BG_ClientListAdd( ent->client->pers.ignoreList, pids[ i ] );
         ClientUserinfoChanged( ent->client->ps.clientNum );
         trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
           "ignore: added %s^7 to your ignore list\n\"",
@@ -594,9 +620,9 @@ Currently Unused until I figure out how to implement it with voice chats.
     }
     else
     {
-      if( BG_ClientListTest( &ent->client->pers.ignoreList, pids[ i ] ) )
+      if( BG_ClientListTest( ent->client->pers.ignoreList, pids[ i ] ) )
       {
-        BG_ClientListRemove( &ent->client->pers.ignoreList, pids[ i ] );
+        BG_ClientListRemove( ent->client->pers.ignoreList, pids[ i ] );
         ClientUserinfoChanged( ent->client->ps.clientNum );
         trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
           "unignore: removed %s^7 from your ignore list\n\"",
@@ -611,7 +637,7 @@ Currently Unused until I figure out how to implement it with voice chats.
     }
   }
 }
-*/
+
 /*
 ==================
 G_ClientNumberFromString

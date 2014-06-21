@@ -1280,6 +1280,12 @@ void ClientDisconnect( int clientNum ) {
 	// hasn't spawned yet
 	G_RemoveQueuedBotBegin( clientNum );
 
+	// sookee: /ignore
+	// make sure we erase this clientNum from all ignore lists
+	for(i = 0; i < i < level.maxclients; ++i)
+		if(BG_ClientListTest(level.clients[i].pers.ignoreList, clientNum))
+			BG_ClientListRemove(level.clients[i].pers.ignoreList, clientNum);
+
 	ent = g_entities + clientNum;
 	if (!ent->client || ent->client->pers.connected == CON_DISCONNECTED) {
 		return;

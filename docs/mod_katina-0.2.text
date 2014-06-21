@@ -1,0 +1,8 @@
+
+
+
+Mod: !admin ban check now checks if connecting IP *starts with* the banned IP
+Mod: msg_to now takes multiline mesages separated by "\\n"
+Add: ability to \ignore <slot> \clients
+Add: ability to \splay <vpathname> arbitrary sounds distributed in pak files
+

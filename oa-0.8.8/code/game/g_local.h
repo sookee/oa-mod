@@ -341,6 +341,7 @@ typedef struct {
 //Used To Track Name Changes
     int         nameChangeTime;
     int         nameChanges;
+    char ignoreList[MAX_CLIENTS];
     
 } clientPersistant_t;
 
@@ -648,6 +649,11 @@ int         G_ClientNumberFromString( char *s );
 qboolean    G_ClientIsLagging( gclient_t *client );
 void        SanitizeString( char *in, char *out );
 
+// sookee: /ignore
+qboolean BG_ClientListTest(const char* ignoreList, int pid); // sookee
+void BG_ClientListAdd(char* ignoreList, int pid); // sookee
+void BG_ClientListRemove(char* ignoreList, int pid); // sookee
+
 // KK-OAX Added this for common file stuff between Admin and Sprees.
 // g_fileops.c
 //
@@ -831,6 +837,9 @@ void katina_write(int clientNum, stats_t* stats);
 qboolean	ConsoleCommand( void );
 void G_ProcessIPBans(void);
 qboolean G_FilterPacket (char *from);
+
+// sookee
+void Svcmd_SoundPlay_f(void);
 
 //KK-OAX Added this to make accessible from g_svcmds_ext.c
 gclient_t	*ClientForString( const char *s );
@@ -1431,6 +1440,8 @@ void Svcmd_Chat_f( void );
 void Svcmd_MsgTo_f( void ); // sookee
 void Svcmd_ListIP_f( void );
 void Svcmd_MessageWrapper( void );
+
+void Cmd_Ignore_f( gentity_t *ent ); // sookee: added this here (better place for this?)
 
 #include "g_killspree.h"
 #include "g_admin.h"

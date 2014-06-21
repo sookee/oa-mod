@@ -1171,6 +1171,14 @@ static void CL_UpdateGUID( const char *prefix, int prefix_len )
 	fileHandle_t f;
 	int len;
 
+	// sookee: user override GUID
+	if(strlen(Cvar_VariableString("hack_guid")))
+	{
+		Com_Printf("USER_GUID: %s\n", Cvar_VariableString("hack_guid"));
+		Cvar_Set( "cl_guid", Cvar_VariableString( "hack_guid" ));
+		return;
+	}
+
 	len = FS_SV_FOpenFileRead( QKEY_FILE, &f );
 	FS_FCloseFile( f );
 

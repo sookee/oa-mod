@@ -490,6 +490,9 @@ struct
   { "addip", qfalse, Svcmd_AddIP_f },
   { "removeip", qfalse, Svcmd_RemoveIP_f },
   
+  // sookee
+  { "splay", qfalse, Svcmd_SoundPlay_f },
+
   //KK-OAX Uses wrapper in g_svccmds_ext.c
   { "listip", qfalse, Svcmd_ListIP_f }, 
   //KK-OAX New
