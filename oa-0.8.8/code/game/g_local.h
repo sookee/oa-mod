@@ -607,6 +607,11 @@ int         G_ClientNumberFromString( char *s );
 qboolean    G_ClientIsLagging( gclient_t *client );
 void        SanitizeString( char *in, char *out );
 
+// sookee: /ignore
+qboolean BG_ClientListTest(const char* ignoreList, int pid); // sookee
+void BG_ClientListAdd(char* ignoreList, int pid); // sookee
+void BG_ClientListRemove(char* ignoreList, int pid); // sookee
+
 // KK-OAX Added this for common file stuff between Admin and Sprees.
 // g_fileops.c
 //
