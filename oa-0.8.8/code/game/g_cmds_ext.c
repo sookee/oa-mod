@@ -536,31 +536,41 @@ void Cmd_AdminMessage_f( gentity_t *ent )
   G_AdminMessage( prefix, "%s", msg );
 }
 
+void BG_ClientListClear(char* ignoreList)
+{
+	int pid;
+	for(pid = 0; pid < MAX_CLIENTS; ++pid)
+		ignoreList[pid] = qfalse;
+}
+
 qboolean BG_ClientListTest(const char* ignoreList, int pid) // sookee
 {
-	int i;
-	for(i = 0; i < MAX_CLIENTS; ++i)
-		if(ignoreList[i] == pid)
-			return qtrue;
-	return qfalse;
+//	int i;
+//	for(i = 0; i < MAX_CLIENTS; ++i)
+//		if(ignoreList[i] == pid)
+//			return qtrue;
+//	return qfalse;
+	return ignoreList[pid];
 }
 
 void BG_ClientListAdd(char* ignoreList, int pid) // sookee
 {
-	int i;
-	for(i = 0; i < MAX_CLIENTS && ignoreList[i] >= 0; ++i) {}
-
-	if(i < MAX_CLIENTS)
-		ignoreList[i] = pid;
+//	int i;
+//	for(i = 0; i < MAX_CLIENTS && ignoreList[i] >= 0; ++i) {}
+//
+//	if(i < MAX_CLIENTS)
+//		ignoreList[i] = pid;
+	ignoreList[pid] = qtrue;
 }
 
 void BG_ClientListRemove(char* ignoreList, int pid) // sookee
 {
-	int i;
-	for(i = 0; i < MAX_CLIENTS && ignoreList[i] != pid; ++i) {}
-
-	if(i < MAX_CLIENTS)
-		ignoreList[i] = (char) -1;
+//	int i;
+//	for(i = 0; i < MAX_CLIENTS && ignoreList[i] != pid; ++i) {}
+//
+//	if(i < MAX_CLIENTS)
+//		ignoreList[i] = (char) -1;
+	ignoreList[pid] = qfalse;
 }
 
 /*

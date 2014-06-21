@@ -341,7 +341,7 @@ typedef struct {
 //Used To Track Name Changes
     int         nameChangeTime;
     int         nameChanges;
-    char ignoreList[MAX_CLIENTS];
+    qboolean ignoreList[MAX_CLIENTS];
     
 } clientPersistant_t;
 
@@ -650,6 +650,7 @@ qboolean    G_ClientIsLagging( gclient_t *client );
 void        SanitizeString( char *in, char *out );
 
 // sookee: /ignore
+void BG_ClientListClear(char* ignoreList);
 qboolean BG_ClientListTest(const char* ignoreList, int pid); // sookee
 void BG_ClientListAdd(char* ignoreList, int pid); // sookee
 void BG_ClientListRemove(char* ignoreList, int pid); // sookee
