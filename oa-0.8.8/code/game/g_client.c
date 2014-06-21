@@ -1625,7 +1625,12 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// event that occurs after this function exits.
 	// Hence here I set a flag that the next ClientUserInfoChanged is trustworthy
 	if(firstTime && !isBot)
+	{
+		// sookee: \ignore
+		BG_ClientListClear(client->pers.ignoreList);
+
 		client_userinfo_ready[clientNum] = qtrue;
+	}
 
 	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 
@@ -2275,8 +2280,13 @@ void ClientDisconnect( int clientNum ) {
     // Write katina stats for each connected player to log
 	for(i=0; i< level.maxclients ; ++i) {
 		ent = g_entities + i;
-        if(ent->inuse && ent->client)
-            katina_write(i, &ent->client->stats); 
+        if(ent->inuse && ent->client) {
+            katina_write(i, &ent->client->stats);
+        	// sookee: /ignore
+        	// make sure we erase this clientNum from all ignore lists
+            if(!(ent->r.svFlags & SVF_BOT))
+            	BG_ClientListRemove(ent->client->pers.ignoreList, clientNum);
+        }
     }
 
 	ent = g_entities + clientNum;

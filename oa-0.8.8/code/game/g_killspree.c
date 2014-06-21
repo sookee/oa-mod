@@ -250,7 +250,7 @@ static char *CreateMessage( gentity_t *ent, char *message, char *spreeNumber )
     }
     //Get the player name.
     Q_strncpyz( name, ent->client->pers.netname, sizeof( name ) );
-    Q_strncpyz( name, S_COLOR_WHITE, sizeof( name ) ); // sookee: fix colors in message
+    Q_strcat( name, sizeof( name ), S_COLOR_WHITE ); // sookee: fix colors in message
     //Do Our Replacements
     Q_strncpyz( output, fillPlaceHolder( message, "[n]", name ), sizeof( output ) ); 
     Q_strncpyz( output, fillPlaceHolder( output, "[k]", spreeNumber ), sizeof( output ) );
@@ -468,11 +468,6 @@ void G_checkForMultiKill( gentity_t *ent ) {
     int     soundIndex;
     int     multiKillCount;
     char    multiKillString[ 2 ];
-    gclient_t   *client;
-    int         clientNum;
-    
-    client = ent->client;
-	clientNum = client - level.clients;
     
     //Let's grab the multikill count for the player first
     multiKillCount = ent->client->pers.multiKillCount;
