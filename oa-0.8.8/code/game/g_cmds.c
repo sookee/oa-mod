@@ -1112,6 +1112,8 @@ G_Say
 */
 
 static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char *name, const char *message ) {
+	int a;
+
 	if (!other) {
 		return;
 	}
@@ -1137,7 +1139,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		return;
 	}
 
-	int a = level.time;
+	a = level.time;
 
 	trap_SendServerCommand( other-g_entities, va("%s \"%s%c%c%s\"", 
 		mode == SAY_TEAM ? "tchat" : "chat",
@@ -1916,8 +1918,8 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	trap_SendServerCommand( -1, va("print \"%s called a vote.\n\"", ent->client->pers.netname ) );
 
 	// sookee: added callvote to log file
-	G_LogPrintf("Callvote: %i %s: %s has called a vote for '%s'\n", ent-g_entities, arg1
-			, ent->client->pers.netname, arg1);
+	G_LogPrintf("Callvote: %i %s %s: %s has called a vote for '%s %s'\n", ent-g_entities, arg1, arg2
+			, ent->client->pers.netname, arg1, arg2);
 
 	// start the voting, the caller autoamtically votes yes
 	level.voteTime = level.time;

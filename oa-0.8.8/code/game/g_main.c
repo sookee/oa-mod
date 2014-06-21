@@ -403,7 +403,7 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_maxNameChanges, "g_maxNameChanges", "50", 0, 0, qfalse},
 
         { &g_timestamp_startgame, "g_timestamp", "0001-01-01 00:00:00", CVAR_SERVERINFO, 0, qfalse},
-        { &mod_katina, "mod_katina", "0.1-beta", CVAR_SERVERINFO|CVAR_ROM, 0, qfalse}
+        { &mod_katina, "mod_katina", "0.1.2", CVAR_SERVERINFO|CVAR_ROM, 0, qfalse}
 
 };
 
@@ -779,7 +779,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
 			G_LogPrintf("------------------------------------------------------------\n" );
 			G_LogPrintf("InitGame: %s\n", serverinfo );
-                        G_LogPrintf("Info: ServerInfo length: %d of %d\n", strlen(serverinfo), MAX_INFO_STRING );
+            G_LogPrintf("Info: ServerInfo length: %d of %d\n", strlen(serverinfo), MAX_INFO_STRING );
 		}
 	} else {
 		G_Printf( "Not logging to disk.\n" );
