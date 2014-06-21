@@ -1112,7 +1112,6 @@ G_Say
 */
 
 static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char *name, const char *message ) {
-	int a;
 
 	if (!other) {
 		return;
@@ -1130,7 +1129,12 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		return;
 	}
 
-        if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
+	// sookee: /ignore
+	if ( BG_ClientListTest(other->client->pers.ignoreList, ent - g_entities) ) {
+		return;
+	}
+
+	if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
 
 	// no chatting to players in tournements
 	if ( (g_gametype.integer == GT_TOURNAMENT )
@@ -1138,8 +1142,6 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		&& ent->client->sess.sessionTeam != TEAM_FREE ) {
 		return;
 	}
-
-	a = level.time;
 
 	trap_SendServerCommand( other-g_entities, va("%s \"%s%c%c%s\"", 
 		mode == SAY_TEAM ? "tchat" : "chat",
@@ -1314,6 +1316,11 @@ static void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *i
 	}
 	// no chatting to players in tournements
 	if ( (g_gametype.integer == GT_TOURNAMENT )) {
+		return;
+	}
+
+	// sookee: /ignore
+	if ( BG_ClientListTest(other->client->pers.ignoreList, ent - g_entities) ) {
 		return;
 	}
 
