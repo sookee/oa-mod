@@ -9,11 +9,3 @@ Fix: !mute now works
 Add: callvote to log file.
 	Callvote: <num> <type>: <playername> has called a vote for '<vote type>'
 Add: msg_to[_beep]? <num> <message> // send message to one player beep or not
-Add: ClientConnectInfo: log file message putting GUID with IP address in log file
-Fix: colors on killing spree message
-Mod: made a short delay on all votes to allow Katina time t react
-Add: Callvote: message in log file
-
-
-
-
