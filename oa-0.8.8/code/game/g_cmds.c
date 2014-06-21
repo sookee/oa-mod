@@ -696,7 +696,6 @@ void BroadcastTeamChange( gclient_t *client, int oldTeam )
 	}
 }
 
-
 /*
 =================
 SetTeam
@@ -2244,8 +2243,8 @@ commands_t cmds[ ] =
   // normal commands
   { "team", 0, Cmd_Team_f },
   { "vote", 0, Cmd_Vote_f },
-  /*{ "ignore", 0, Cmd_Ignore_f },
-  { "unignore", 0, Cmd_Ignore_f },*/
+  { "ignore", 0, Cmd_Ignore_f }, // sookee: uncommented this feature
+  { "unignore", 0, Cmd_Ignore_f },
 
   // communication commands
   { "tell", CMD_MESSAGE, Cmd_Tell_f },
