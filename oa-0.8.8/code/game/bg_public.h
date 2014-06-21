@@ -734,6 +734,7 @@ qboolean	BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 #define VF_fraglimit    128
 #define VF_custom       256
 #define VF_shuffle      512
+#define VF_clientmute   1024 // sookee
 
 // content masks
 #define	MASK_ALL				(-1)

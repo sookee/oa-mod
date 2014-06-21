@@ -518,8 +518,9 @@ typedef struct {
 	int			voteYes;
 	int			voteNo;
 	int			numVotingClients;		// set by CountVotes
-        int             voteKickClient;                         // if non-negative the current vote is about this client.
-        int             voteKickType;                           // if 1 = ban (execute ban)
+	int			voteKickClient;                         // if non-negative the current vote is about this client.
+	int			voteKickType;                           // if 1 = ban (execute ban)
+	int			voteMuteClient;                         // if non-negative the current vote is about this client.
 
 	// team voting state
 	char		teamVoteString[2][MAX_STRING_CHARS];

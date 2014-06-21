@@ -638,7 +638,10 @@ void G_UpdateCvars( void ) {
                                     if( allowedVote("clientkick") )
                                         voteflags|=VF_clientkick;
 
-                                    if( allowedVote("shuffle") )
+                                    if( allowedVote("clientmute") ) // sookee:
+                                        voteflags|=VF_clientmute;
+
+                                   if( allowedVote("shuffle") )
                                         voteflags|=VF_shuffle;
 
                                     if( allowedVote("nextmap") )
@@ -888,6 +891,9 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
             if( allowedVote("clientkick") )
                 voteflags|=VF_clientkick;
+
+            if( allowedVote("clientmute") )
+                voteflags|=VF_clientmute;
 
             if( allowedVote("shuffle") )
                 voteflags|=VF_shuffle;

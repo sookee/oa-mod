@@ -1669,6 +1669,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		doesRestart=1;
 	} else if ( !Q_stricmp( arg1, "kick" ) ) {
 	} else if ( !Q_stricmp( arg1, "clientkick" ) ) {
+	} else if ( !Q_stricmp( arg1, "clientmute" ) ) { // sookee:
 	} else if ( !Q_stricmp( arg1, "g_doWarmup" ) ) {
 	} else if ( !Q_stricmp( arg1, "timelimit" ) ) {
 	} else if ( !Q_stricmp( arg1, "fraglimit" ) ) {
@@ -1693,6 +1694,8 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     strcat(buffer, "kick <player>, ");
                 if(allowedVote("clientkick"))
                     strcat(buffer, "clientkick <clientnum>, ");
+                if(allowedVote("clientmute"))
+                    strcat(buffer, "clientmute <clientnum>, ");
                 if(allowedVote("g_doWarmup"))
                     strcat(buffer, "g_doWarmup, ");
                 if(allowedVote("timelimit"))
@@ -1725,6 +1728,8 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     strcat(buffer, "kick <player>, ");
                 if(allowedVote("clientkick"))
                     strcat(buffer, "clientkick <clientnum>, ");
+                if(allowedVote("clientmute"))
+                    strcat(buffer, "clientmute <clientnum>, ");
                 if(allowedVote("shuffle"))
                     strcat(buffer, "shuffle, ");
                 if(allowedVote("g_doWarmup"))
@@ -1869,6 +1874,16 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     level.voteKickType = 1; //ban
                 }
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
+        } else if ( !Q_stricmp( arg1, "clientmute" ) ) {
+                i = atoi(arg2);
+
+                if(i>=MAX_CLIENTS) { //Only numbers <128 is clients
+                    trap_SendServerCommand( ent-g_entities, "print \"Cannot mute that number.\n\"" );
+                    return;
+                }
+                level.voteMuteClient = i;
+                Com_sprintf( level.voteString, sizeof( level.voteString ), "!mute \"%d\" \"Muted by public vote\"", i );
+		        Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Mute %s?" , level.clients[i].pers.netname );
         } else if ( !Q_stricmp( arg1, "shuffle" ) ) {
                 if(g_gametype.integer<GT_TEAM || g_ffa_gt==1) { //Not a team game
                     trap_SendServerCommand( ent-g_entities, "print \"Can only be used in team games.\n\"" );
