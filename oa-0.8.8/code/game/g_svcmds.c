@@ -493,6 +493,9 @@ struct
   // sookee
   { "splay", qfalse, Svcmd_SoundPlay_f },
 
+  // \ignore num1 num2 <super>
+  // \ignore num1 num2 <both> <super>
+
   //KK-OAX Uses wrapper in g_svccmds_ext.c
   { "listip", qfalse, Svcmd_ListIP_f }, 
   //KK-OAX New

@@ -95,34 +95,34 @@ char *basepath( char *fname )
 
 	return dp;
 }
-
+// this version of memmove is broken in GCC 4.8
 /* memmove is defined here because some vendors don't provide it at
    all and others do a terrible job (like calling malloc) */
 // -- ouch, that hurts -- ln
-#ifndef MACOS_X   /* always use the system memmove() on Mac OS X. --ryan. */
-#ifdef memmove
-#undef memmove
-#endif
-void *
-memmove(void *dp, const void *sp, size_t n)
-{
-	unsigned char *cdp, *csp;
-
-	if (n<=0)
-		return 0;
-	cdp = dp;
-	csp = (unsigned char *)sp;
-	if (cdp < csp) {
-		do {
-			*cdp++ = *csp++;
-		} while (--n);
-	} else {
-		cdp += n;
-		csp += n;
-		do {
-			*--cdp = *--csp;
-		} while (--n);
-	}
-	return 0;
-}
-#endif
+//#ifndef MACOS_X   /* always use the system memmove() on Mac OS X. --ryan. */
+//#ifdef memmove
+//#undef memmove
+//#endif
+//void *
+//memmove(void *dp, const void *sp, size_t n)
+//{
+//	unsigned char *cdp, *csp;
+//
+//	if (n<=0)
+//		return 0;
+//	cdp = dp;
+//	csp = (unsigned char *)sp;
+//	if (cdp < csp) {
+//		do {
+//			*cdp++ = *csp++;
+//		} while (--n);
+//	} else {
+//		cdp += n;
+//		csp += n;
+//		do {
+//			*--cdp = *--csp;
+//		} while (--n);
+//	}
+//	return 0;
+//}
+//#endif
