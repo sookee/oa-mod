@@ -1167,14 +1167,22 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	switch ( mode ) {
 	default:
 	case SAY_ALL:
-		G_LogPrintf( "client: %d:\n", ent - g_entities ); // sookee client number of person about to act
-		G_LogPrintf( "say: %s: %s\n", ent->client->pers.netname, chatText );
+		if(mod_katina_flags.integer & KATINA_SAY & KATINA_MACHINE_ONLY)
+			G_LogPrintf( "say: %d: %s\n", ent - g_entities, chatText );
+		else if(mod_katina_flags.integer & KATINA_SAY)
+			G_LogPrintf( "say: %d %d %s: %s\n", ent - g_entities, strlen(ent->client->pers.netname), ent->client->pers.netname, chatText );
+		else
+			G_LogPrintf( "say: %s: %s\n", ent->client->pers.netname, chatText );
 		Com_sprintf (name, sizeof(name), "%s%c%c"EC": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 		color = COLOR_GREEN;
 		break;
 	case SAY_TEAM:
-		G_LogPrintf( "client: %d:\n", ent - g_entities ); // sookee client number of person about to act
-		G_LogPrintf( "sayteam: %s: %s\n", ent->client->pers.netname, chatText );
+		if(mod_katina_flags.integer & KATINA_SAY & KATINA_MACHINE_ONLY)
+			G_LogPrintf( "sayteam: %d: %s\n", ent - g_entities, chatText );
+		else if(mod_katina_flags.integer & KATINA_SAY)
+			G_LogPrintf( "sayteam: %d %d %s: %s\n", ent - g_entities, strlen(ent->client->pers.netname), ent->client->pers.netname, chatText );
+		else
+			G_LogPrintf( "sayteam: %s: %s\n", ent->client->pers.netname, chatText );
 		if (Team_GetLocationMsg(ent, location, sizeof(location)))
 			Com_sprintf (name, sizeof(name), EC"(%s%c%c"EC") (%s)"EC": ", 
 				ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location);

@@ -1203,6 +1203,27 @@ extern  vmCvar_t    g_warningExpire;
 extern  vmCvar_t    g_minNameChangePeriod;
 extern  vmCvar_t    g_maxNameChanges;
 
+// mod_katina
+enum
+{
+	// ONLY output machine readable portion of log messages
+	// (not fully implemented yet)
+	KATINA_MACHINE_ONLY = (1 << 0)
+
+
+	// log messages contain Push: messages
+	, KATINA_PUSH = (1 << 1)
+	// log "say:" messages contain client number, name length
+	// 00:00 say: 5 11 Player Name: message
+	// unless KATINA_MACHINE_ONLY is set giving only client number
+	// 00:00 say: 5: message
+	, KATINA_SAY = (1 << 2)
+};
+
+// sookee: printed to log file at start of each game
+// to provide alternative log format information
+extern	vmCvar_t	mod_katina_flags;
+
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));
 int		trap_Milliseconds( void );
